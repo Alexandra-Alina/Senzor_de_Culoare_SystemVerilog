@@ -1,5 +1,5 @@
-ifndef APB_INTERFACE_SV
-define APB_INTERFACE_SV
+`ifndef APB_INTERFACE_SV
+`define APB_INTERFACE_SV
 
 interface apb_interface #(APB_AW=32,APB_DW=32) (input clk, input rst_n);
 
