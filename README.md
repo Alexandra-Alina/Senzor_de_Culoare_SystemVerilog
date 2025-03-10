@@ -1,2 +1,3 @@
 # Senzor_de_Culoare_SystemVerilog
 test
+test2
