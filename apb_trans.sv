@@ -16,11 +16,12 @@ class apb_trans #(APB_AW=32,APB_DW=32) extends uvm_sequence_item;
         `uvm_field_enum(apb_access_kind_t, access, UVM_ALL_ON)
         `uvm_field_int(trans_delay, UVM_ALL_ON)  
         `uvm_field_int(ack_delay, UVM_ALL_ON)
+        `uvm_field_int(slv_error, UVM_ALL_ON)
     `uvm_object_utils_end
 
     // Constraints
-    constraint abp_trans_delay_c { soft trans_delay inside [1:50]; };
-    constraint abp_trans_delay_c { soft ack_delay inside [1:10]; };
+    constraint abp_trans_delay_c { soft trans_delay inside [1:10]; };
+    constraint abp_trans_delay_c { soft ack_delay inside [0:5]; };
     
     function new (string name = "apb_trans");
         super.new(name);
