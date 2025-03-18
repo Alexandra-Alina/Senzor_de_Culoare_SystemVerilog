@@ -88,6 +88,7 @@ class apb_monitor #(APB_AW=32,APB_DW=32) extends uvm_monitor;
       apb_trans.addr = apb_vif.mon_cb.paddr;
       apb_trans.access = (apb_vif.mon_cb.pwrite == 1'b1) ? APB_WRITE : APB_READ;
       apb_trans.data = (apb_trans.access == APB_WRITE) ? apb_vif.mon_cb.pwdata : apb_vif.mon_cb.prdata;
+      apb_trans.slv_error = apb_vif.mon_cb.pslverr;
 
       apb_trans.trans_delay = trans_delay;
 
