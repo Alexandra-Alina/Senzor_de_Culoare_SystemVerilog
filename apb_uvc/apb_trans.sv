@@ -18,7 +18,7 @@ class apb_trans #(APB_AW=32,APB_DW=32) extends uvm_sequence_item;
     `uvm_object_utils_end
 
     // Constraints
-    constraint abp_trans_delay_c { soft trans_delay inside [1:10]; };
+    constraint abp_trans_delay_c { soft trans_delay inside {[1:10]}; };
     
     function new (string name = "apb_trans");
         super.new(name);
