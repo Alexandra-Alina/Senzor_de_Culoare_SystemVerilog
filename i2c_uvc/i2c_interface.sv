@@ -20,6 +20,29 @@ interface i2c_interface (input clk, input rst_n);
     input sda;
   endclocking:mon_cb 
 
+  // Assertions
+
+    initial forever begin
+    @(posedge scl);
+    @(negedge clk);
+    stable_assertion_enable = 1'b1;
+     @(negedge scl);
+    stable_assertion_enable = 1'b0;
+    @(posedge clk);
+  end
+  
+
+  // Signals are never X or Z
+  assert property (@(posedge clk) disable iff (!rst_n) !$isunknown(scl))
+    else $error("I2C Interface: !!! scl is unknown !!!");
+  assert property (@(posedge clk) disable iff (!rst_n) !$isunknown(sda))
+    else $error("I2C Interface: !!! sda is unknown !!!");
+
+  // SDA doesn't change when SCL is HIGH 
+
+ assert property (@(clk) disable iff (!rst_n) stable_assertion_enable |-> $stable(sda))
+    else $error("I2C Interface: !!! SDA changed when SCL high!!!");
+
 endinterface:i2c_interface
 
 `endif 
