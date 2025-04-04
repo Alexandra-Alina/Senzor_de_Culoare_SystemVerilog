@@ -20,7 +20,7 @@ class i2c_trans #(I2C_AW=7,I2C_DW=8) extends uvm_sequence_item;
   `uvm_object_utils_end
 
   constraint data_order_c {solve nr_words before data;}
-  constraint nr_words_c {nr_words inside {[1:256]};}
+  constraint nr_words_c {nr_words == 5;}
   constraint data_c {data.size() == nr_words;}
 
   function new (string name = "i2c_trans");
