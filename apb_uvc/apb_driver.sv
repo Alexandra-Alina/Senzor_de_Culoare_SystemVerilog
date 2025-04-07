@@ -24,44 +24,45 @@ class apb_driver #(APB_AW=32,APB_DW=32) extends uvm_driver #(apb_trans #(APB_AW,
     end
   endfunction:build_phase
 
+
   task run_phase(uvm_phase phase);
     super.run_phase(phase);
-    drive_reset_values();
-    // initial reset
-    @(negedge apb_vif.rst_n);
-    @(posedge apb_vif.rst_n);
-    fork
-      get_and_drive();
-    join
-  endtask:run_phase
+      `uvm_warning(get_type_name(), "\n\nWAIT RESET");
 
-  //idle values for driven signals
-  task drive_reset_values();
-        apb_vif.m_cb.paddr  <= 'h0 ;
-        apb_vif.m_cb.psel   <= 1'b0;
-        apb_vif.m_cb.penable<= 1'b0;
-        apb_vif.m_cb.pwrite <= 1'b0;
-        apb_vif.m_cb.pwdata <= 'h0 ;
-  endtask:drive_reset_values
-
-  task get_and_drive();
     forever begin
-      seq_item_port.get_next_item(req); //get item from sequencer
+      //Initial reset
+      if (!apb_vif.rst_n) begin
+        @(posedge apb_vif.rst_n);
+      end
+
       fork
         begin
-          wait(apb_vif.rst_n === 'b1);
-          drive_trans(req);
+          //Reset
+          wait_reset();
         end
         begin
-          @(negedge apb_vif.rst_n);
-          drive_reset_values();
-          @(posedge apb_vif.rst_n);
+          seq_item_port.get_next_item(req); //get item from sequencer
+          drive_trans(req);
+          seq_item_port.item_done();
         end
       join_any
       disable fork;
-      seq_item_port.item_done(); //signal the sequencer it's ok to send the next item
     end
-  endtask: get_and_drive
+  endtask:run_phase
+
+
+  //task that detects the reset and initializes the signals
+  task wait_reset();
+        @(negedge apb_vif.rst_n);
+
+        `uvm_info(get_type_name(), "Reset detected by APB Driver", UVM_LOW);
+
+        apb_vif.m_cb.paddr   <=  'h0;
+        apb_vif.m_cb.psel    <= 1'b0;
+        apb_vif.m_cb.penable <= 1'b0;
+        apb_vif.m_cb.pwrite  <= 1'b0;
+        apb_vif.m_cb.pwdata  <=  'h0;
+  endtask:wait_reset
 
   //drive APB transaction
   task drive_trans(apb_trans #(APB_AW,APB_DW) trans);
@@ -97,6 +98,7 @@ class apb_driver #(APB_AW=32,APB_DW=32) extends uvm_driver #(apb_trans #(APB_AW,
         `uvm_info(get_type_name(), $sformatf("APB MASTER Driver end trasfer"), UVM_LOW)
 	 		
   endtask: drive_trans
+
 
 endclass:apb_driver
 
