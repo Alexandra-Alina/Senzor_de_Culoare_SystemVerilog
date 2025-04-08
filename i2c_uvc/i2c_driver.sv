@@ -63,7 +63,7 @@ class i2c_driver #(I2C_AW=7,I2C_DW=8) extends uvm_driver;
     bit access_kind;
     // wait for START
     `uvm_info(get_type_name(), $stformatf("I2C SLAVE"), UVM_MEDIUM)
-    @(negedge i2c_vif.s_cb.scl);
+    @(negedge i2c_vif.mon_cb.sda iff i2c_vif.mon_cb.scl === 'b1);
     `uvm_info(get_type_name(), $sformatf("I2C SLAVE Driver start a transfer:\n%s",trans.sprint()), UVM_LOW)
     // read address
     repeat(I2C_AW) begin
@@ -72,8 +72,7 @@ class i2c_driver #(I2C_AW=7,I2C_DW=8) extends uvm_driver;
       rx_addr[0] = i2c_vif.s_cb.sda;
     end 
     @(posedge i2c_vif.s_cb.scl);
-    // read access kind
-    access_kind = i2c_vif.s_cb.sda;
+    // receive access kind
     @(negedge i2c_vif.s_cb.scl);
     // send ACK if received address = agent address, else send NACK
     `uvm_info(get_type_name(), $sformatf("received address: %h   %b ",rx_addr, (rx_addr == address)), UVM_MEDIUM)

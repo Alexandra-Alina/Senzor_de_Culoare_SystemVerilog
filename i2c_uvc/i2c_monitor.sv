@@ -55,7 +55,7 @@ class i2c_monitor #(I2C_AW=7,I2C_DW=8) extends uvm_monitor;
   task collect_transactions();
     i2c_trans = new();
     // Wait for START
-    @(negedge i2c_vif.mon_cb.scl);
+    @(negedge i2c_vif.mon_cb.sda iff i2c_vif.mon_cb.scl === 'b1);
     `uvm_info(get_type_name(), $sformatf("I2C Monitor has started to collect a transfer"), UVM_LOW)
     // read address
     repeat(I2C_AW) begin
