@@ -6,7 +6,7 @@ class i2c_trans #(I2C_AW=7,I2C_DW=8) extends uvm_sequence_item;
   rand bit [I2C_AW-1:0]     addr        ;    
   rand i2c_access_kind_t    access      ;       
   rand int                  nr_words    ; 
-  rand bit [I2C_DW-1:0]     data [$:255];   
+  rand bit [I2C_DW-1:0]     data [$:9]  ;   
   rand i2c_resp_kind_t      addr_resp   ;   
   rand i2c_resp_kind_t      data_resp   ; 
   
@@ -19,9 +19,8 @@ class i2c_trans #(I2C_AW=7,I2C_DW=8) extends uvm_sequence_item;
     `uvm_field_enum(i2c_resp_kind_t, data_resp, UVM_ALL_ON)
   `uvm_object_utils_end
 
-  constraint data_order_c {solve nr_words before data;}
-  constraint nr_words_c {nr_words == 5;}
-  constraint data_c {data.size() == nr_words;}
+  constraint nr_words_c {nr_words == 10       ;}
+  constraint access_c   {access   == I2C_WRITE;}
 
   function new (string name = "i2c_trans");
     super.new(name);
