@@ -1,5 +1,5 @@
 
-class apb_base_seq extends uvm_sequence #(apb_seq_item);
+class apb_base_seq extends uvm_sequence #(apb_trans);
 
   // Required macro for sequences automation
   `uvm_object_utils(apb_base_seq)
@@ -81,7 +81,7 @@ endclass : apb_rnd_pkt
 // Sends one random write pkt and then reads the same address
 //------------------------------------------------------------------------------
 class apb_write_read extends apb_base_seq;
-  rand bit [ADDR_WIDTH-1:0] m_addr;
+  rand bit [`APB_AW-1:0] m_addr;
 
   `uvm_object_utils(apb_write_read)
 
@@ -92,13 +92,13 @@ class apb_write_read extends apb_base_seq;
   virtual task body();
     `uvm_info(get_type_name(), "Executing apb_write_read sequence", UVM_LOW)
     repeat(1) begin
-      `uvm_do_with(req, { req.wr_rd == APB_WRITE;
-                          req.addr == 'h1;})
+      `uvm_do_with(req, { req.access == APB_WRITE;
+                          req.addr   == 'h1      ;})
 
       m_addr = req.addr;
 
-      `uvm_do_with(req, { req.wr_rd == APB_READ;
-                          req.addr == m_addr; })
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == m_addr  ; })
     end
   endtask
 endclass : apb_write_read
@@ -108,9 +108,9 @@ endclass : apb_write_read
 // Sends one random read pkt, modifies one random bit then writes back to the same address
 //------------------------------------------------------------------------------
 class apb_rmw extends apb_base_seq;
-  bit [DATA_WIDTH-1:0] m_data;
-  bit [ADDR_WIDTH-1:0] m_addr;
-  rand bit [ADDR_WIDTH-1:0] index; 
+  bit [`APB_DW-1:0] m_data;
+  bit [`APB_AW-1:0] m_addr;
+  rand bit [`APB_AW-1:0] index; 
   rand bit rand_bit_value;
 
   `uvm_object_utils(apb_rmw)
@@ -122,16 +122,16 @@ class apb_rmw extends apb_base_seq;
   virtual task body();
     `uvm_info(get_type_name(), "Executing apb_rmw sequence", UVM_LOW)
     repeat(1) begin
-      `uvm_do_with(req, {req.wr_rd == APB_READ;})
+      `uvm_do_with(req, {req.access == APB_READ;})
 
       m_addr = req.addr;
       m_data = req.data;
       m_data[index] = rand_bit_value;
 
       `uvm_do_with(req, {
-          req.wr_rd == APB_WRITE;
-          req.addr == m_addr;
-          req.data == m_data;
+          req.access == APB_WRITE;
+          req.addr   == m_addr   ;
+          req.data   == m_data   ;
         })
     end
   endtask

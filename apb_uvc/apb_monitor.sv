@@ -1,18 +1,18 @@
 `ifndef APB_MONITOR_SV
 `define APB_MONITOR_SV
 
-class apb_monitor #(APB_AW=32,APB_DW=32) extends uvm_monitor;
+class apb_monitor extends uvm_monitor;
 
-  uvm_analysis_port #(apb_trans#(APB_AW,APB_DW)) apb_port;
-  virtual apb_interface #(APB_AW,APB_DW) apb_vif;
+  uvm_analysis_port #(apb_trans) apb_port;
+  virtual apb_interface  apb_vif;
 
-  apb_trans#(APB_AW,APB_DW) apb_trans;
+  apb_trans apb_trans;
   
   // Local variables
   int unsigned transfer_number;     // number of transfers collected
   int unsigned trans_delay;         // delay between last pready (ack) and next psel
 
-  `uvm_component_utils_begin(apb_monitor #(APB_AW,APB_DW))
+  `uvm_component_utils_begin(apb_monitor)
     `uvm_field_int(transfer_number, UVM_ALL_ON)
     `uvm_field_int(trans_delay, UVM_ALL_ON)
   `uvm_component_utils_end
@@ -24,7 +24,7 @@ class apb_monitor #(APB_AW=32,APB_DW=32) extends uvm_monitor;
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    if (!uvm_config_db#(virtual apb_interface #(APB_AW,APB_DW))::get(this,"","apb_vif", apb_vif)) begin
+    if (!uvm_config_db#(virtual apb_interface)::get(this,"","apb_vif", apb_vif)) begin
       `uvm_fatal(get_type_name(), {"Virtual interface must be set for: ",get_full_name(),".apb_vif"})       
     end
   endfunction:build_phase

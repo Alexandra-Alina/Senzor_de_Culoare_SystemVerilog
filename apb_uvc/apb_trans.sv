@@ -1,10 +1,10 @@
 `ifndef APB_TRANS_SV
 `define APB_TRANS_SV
   
-class apb_trans #(APB_AW=32,APB_DW=32) extends uvm_sequence_item;
+class apb_trans extends uvm_sequence_item;
   
-    rand bit [APB_AW-1:0]  addr;    
-    rand bit [APB_DW-1:0]  data;   
+    rand bit [`APB_AW-1:0]  addr;    
+    rand bit [`APB_DW-1:0]  data;   
     rand apb_access_kind_t access;       
     rand int               trans_delay;       
     rand bit               slv_error;

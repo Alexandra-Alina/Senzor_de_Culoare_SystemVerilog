@@ -2,15 +2,11 @@
 `ifndef APB_DRIVER_SV
 `define APB_DRIVER_SV
 
-class apb_driver #(APB_AW=32,APB_DW=32) extends uvm_driver #(apb_trans #(APB_AW,APB_DW));
+class apb_driver extends uvm_driver #(apb_trans);
 
-  apb_agent_kind_t agent_kind;
+  `uvm_component_utils(apb_driver)
 
-  `uvm_component_utils_begin(apb_driver#(APB_AW,APB_DW))
-    `uvm_field_enum(apb_agent_kind_t, agent_kind, UVM_ALL_ON)
-  `uvm_component_utils_end
-
-  virtual interface apb_interface #(APB_AW,APB_DW) apb_vif;
+  virtual interface apb_interface apb_vif;
 
   function new(string name,uvm_component parent = null);
     super.new(name,parent);
@@ -19,7 +15,7 @@ class apb_driver #(APB_AW=32,APB_DW=32) extends uvm_driver #(apb_trans #(APB_AW,
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     
-    if (!uvm_config_db#(virtual apb_interface #(APB_AW,APB_DW))::get(this,"","apb_vif", apb_vif)) begin
+    if (!uvm_config_db#(virtual apb_interface)::get(this,"","apb_vif", apb_vif)) begin
       `uvm_fatal(get_type_name(), {"Virtual interface must be set for: ",get_full_name(),".apb_vif"})
     end
   endfunction:build_phase
@@ -65,7 +61,7 @@ class apb_driver #(APB_AW=32,APB_DW=32) extends uvm_driver #(apb_trans #(APB_AW,
   endtask:wait_reset
 
   //drive APB transaction
-  task drive_trans(apb_trans #(APB_AW,APB_DW) trans);
+  task drive_trans(apb_trans  trans);
 		`uvm_info(get_type_name(), $sformatf("APB MASTER Driver start a transfer:\n%s",trans.sprint()), UVM_LOW)
     	repeat (trans.trans_delay) @(apb_vif.m_cb);
         
@@ -86,16 +82,14 @@ class apb_driver #(APB_AW=32,APB_DW=32) extends uvm_driver #(apb_trans #(APB_AW,
 	    @(apb_vif.m_cb);
 
         // Wait for pready
-	    while (apb_vif.m_cb.pready === 1'b0) begin
-	    	@(posedge apb_vif.clk);
-	        @(apb_vif.m_cb);
-	    end
+      
+	    while (apb_vif.m_cb.pready === 1'b0) 
+	      @(apb_vif.m_cb);
 
 	    apb_vif.m_cb.psel <= 1'b0;
 	    apb_vif.m_cb.penable <= 1'b0;
-	    trans.data = apb_vif.m_cb.prdata;
-        
-        `uvm_info(get_type_name(), $sformatf("APB MASTER Driver end trasfer"), UVM_LOW)
+       
+      `uvm_info(get_type_name(), $sformatf("APB MASTER Driver end trasfer"), UVM_LOW)
 	 		
   endtask: drive_trans
 

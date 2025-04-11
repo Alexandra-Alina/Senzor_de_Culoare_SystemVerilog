@@ -1,5 +1,5 @@
 
-class apb_sequencer extends uvm_sequencer #(apb_seq_item);
+class apb_sequencer extends uvm_sequencer #(apb_trans);
 
     `uvm_component_utils(apb_sequencer)
   

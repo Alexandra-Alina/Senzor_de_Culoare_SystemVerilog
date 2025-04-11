@@ -12,6 +12,9 @@ interface apb_interface #(APB_AW=32,APB_DW=32) (input clk, input rst_n);
   wire [APB_DW-1:0] prdata  ; // data from Slave
   wire              pready  ; // acknowledge
   wire              pslverr ; // error
+  
+  
+  reg stable_assertion_enable;
 
   // Clocking blocks
   // Driver
