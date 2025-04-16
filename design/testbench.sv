@@ -1,4 +1,16 @@
+
+`include "../apb_uvc/apb_interface.sv"
+`include "../i2c_uvc/i2c_interface.sv"
+`include "../i2c_uvc/i2c_pkg.sv"
+`include "../apb_uvc/apb_pkg.sv"
+
 module testbench;
+
+  import uvm_pkg::*;
+  `include "uvm_macros.svh"
+
+  import apb_pkg::*;
+  import i2c_pkg::*;
 
 // Localparameteres
 localparam TEST_ADDR_WIDTH = 5;
@@ -21,8 +33,7 @@ wire                        pslverr   ; // Slave error; Is asserted with pready 
 // I2C interface
 triand                      scl       ; // Serial clock
 triand                      sda       ; // Serial data
-
-
+ 
 clk_rst_generator #(
   .CLK_PERIOD(10)
 ) i_clk_rst_generator(
@@ -47,5 +58,38 @@ senzor_top #(
   .scl      (scl              ),
   .sda      (sda              )
 );
+
+apb_interface #(TEST_ADDR_WIDTH,TEST_DATA_WIDTH) apb_vif (
+  .clk  (clk                  ), 
+  .rst_n(rst_n                )
+);
+// outputs
+assign paddr   = apb_vif.paddr  ;
+assign psel    = apb_vif.psel   ;
+assign penable = apb_vif.penable;
+assign pwrite  = apb_vif.pwrite ;
+assign pwdata  = apb_vif.pwdata ;
+// inputs
+assign apb_vif.prdata  = prdata ;
+assign apb_vif.pready  = pready ;
+assign apb_vif.pslverr = pslverr;
+
+i2c_interface i2c_vif (
+  .clk  (clk                  ), 
+  .rst_n(rst_n                )
+);
+// input
+assign i2c_vif.scl = scl;
+// inout
+assign i2c_vif.sda = sda;
+
+initial begin
+
+  uvm_config_db #(virtual interface apb_interface#(TEST_ADDR_WIDTH,TEST_DATA_WIDTH))::set(null,"*.env.apb_mst_agnt.*", "apb_vif", apb_vif);
+  
+  uvm_config_db #(virtual interface i2c_interface)::set(null, "*.env.i2c_slv_agnt.*", "i2c_vif", i2c_vif);
+
+  run_test();
+end
 
 endmodule

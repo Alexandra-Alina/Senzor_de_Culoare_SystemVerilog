@@ -1,11 +1,11 @@
 `ifndef I2C_DRIVER_SV
 `define I2C_DRIVER_SV
 
-class i2c_driver #(I2C_AW=7,I2C_DW=8) extends uvm_driver;
+class i2c_driver extends uvm_driver;
 
-  bit [I2C_AW-1:0] address;
+  bit [`I2C_AW-1:0] address;
 
-  `uvm_component_utils_begin(i2c_driver#(I2C_AW,I2C_DW))
+  `uvm_component_utils_begin(i2c_driver)
     `uvm_field_int(address, UVM_ALL_ON)
   `uvm_component_utils_end
 
@@ -59,20 +59,19 @@ class i2c_driver #(I2C_AW=7,I2C_DW=8) extends uvm_driver;
 
   // drive I2C transaction
   task drive_trans();
-    bit [I2C_AW-1:0] rx_addr;
+    bit [`I2C_AW-1:0] rx_addr;
     bit access_kind;
     // wait for START
-    `uvm_info(get_type_name(), $stformatf("I2C SLAVE"), UVM_MEDIUM)
+    `uvm_info(get_type_name(), $sformatf("I2C SLAVE"), UVM_MEDIUM)
     @(negedge i2c_vif.mon_cb.sda iff i2c_vif.mon_cb.scl === 'b1);
-    `uvm_info(get_type_name(), $sformatf("I2C SLAVE Driver start a transfer:\n%s",trans.sprint()), UVM_LOW)
     // read address
-    repeat(I2C_AW) begin
+    repeat(`I2C_AW) begin
       @(posedge i2c_vif.s_cb.scl);
       rx_addr <<= 1;
       rx_addr[0] = i2c_vif.s_cb.sda;
     end 
-    @(posedge i2c_vif.s_cb.scl);
     // receive access kind
+    // nu da ack daca nu e write
     @(negedge i2c_vif.s_cb.scl);
     // send ACK if received address = agent address, else send NACK
     `uvm_info(get_type_name(), $sformatf("received address: %h   %b ",rx_addr, (rx_addr == address)), UVM_MEDIUM)
@@ -86,7 +85,7 @@ class i2c_driver #(I2C_AW=7,I2C_DW=8) extends uvm_driver;
       if(rx_addr == address) 
         forever begin
           // receive data and send ACK
-          repeat(I2C_DW) @(posedge i2c_vif.s_cb.scl);
+          repeat(`I2C_DW) @(posedge i2c_vif.s_cb.scl);
           @(negedge i2c_vif.s_cb.scl);
           i2c_vif.s_cb.sda <= 'b0;
           @(negedge i2c_vif.s_cb.scl);

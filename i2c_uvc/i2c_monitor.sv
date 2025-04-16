@@ -1,18 +1,18 @@
 `ifndef I2C_MONITOR_SV
 `define I2C_MONITOR_SV
 
-class i2c_monitor #(I2C_AW=7,I2C_DW=8) extends uvm_monitor;
+class i2c_monitor extends uvm_monitor;
 
-  uvm_analysis_port #(i2c_trans#(I2C_AW,I2C_DW)) i2c_port;
+  uvm_analysis_port #(i2c_trans) i2c_port;
   virtual i2c_interface i2c_vif;
 
-  protected i2c_trans#(I2C_AW,I2C_DW) i2c_trans;
+  protected i2c_trans i2c_trans;
 
   // Local variables
   int unsigned transfer_number;     // number of transfers collected
   bit [7:0] data;                   // read data
 
-  `uvm_component_utils_begin(i2c_monitor #(I2C_AW,I2C_DW))
+  `uvm_component_utils_begin(i2c_monitor)
     `uvm_field_int(transfer_number, UVM_ALL_ON)
   `uvm_component_utils_end
 
@@ -58,7 +58,7 @@ class i2c_monitor #(I2C_AW=7,I2C_DW=8) extends uvm_monitor;
     @(negedge i2c_vif.mon_cb.sda iff i2c_vif.mon_cb.scl === 'b1);
     `uvm_info(get_type_name(), $sformatf("I2C Monitor has started to collect a transfer"), UVM_LOW)
     // read address
-    repeat(I2C_AW) begin
+    repeat(`I2C_AW) begin
       @(posedge i2c_vif.mon_cb.scl);
       i2c_trans.addr <<= 1;
       i2c_trans.addr[0] = i2c_vif.mon_cb.sda;
@@ -73,7 +73,7 @@ class i2c_monitor #(I2C_AW=7,I2C_DW=8) extends uvm_monitor;
     fork
       // read data
       forever begin
-        repeat(I2C_DW) begin
+        repeat(`I2C_DW) begin
           @(posedge i2c_vif.mon_cb.scl);
           data <<= 1;
           data[0] = i2c_vif.mon_cb.sda;
@@ -88,8 +88,7 @@ class i2c_monitor #(I2C_AW=7,I2C_DW=8) extends uvm_monitor;
       // wait for STOP
       begin
         @(posedge i2c_vif.mon_cb.sda iff i2c_vif.mon_cb.scl === 'b1);
-          `uvm_info(get_type_name(), $sformatf("STOP"), UVM_MEDIUM)
-        i2c_trans.trans_end = STOP;
+        `uvm_info(get_type_name(), $sformatf("STOP"), UVM_MEDIUM)
       end
     join_any
     disable fork;

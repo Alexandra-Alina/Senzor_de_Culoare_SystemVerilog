@@ -1,13 +1,14 @@
 `ifndef ENVIRONMENT_SV
 `define ENVIRONMENT_SV
 
-class environment #(APB_AW=32,APB_DW=32,I2C_AW=7,I2C_DW=8) extends uvm_env;
+class environment extends uvm_env;
 
-  `uvm_component_utils(environment #(APB_AW,APB_DW,I2C_AW,I2C_DW))
+  `uvm_component_utils(environment)
 
-  apb_agent #(APB_AW,APB_DW) apb_mst_agnt;
-  i2c_agent #(I2C_AW,I2C_DW) i2c_slv_agnt;
-  bit [I2C_AW-1:0] i2c_address;
+  apb_agent apb_mst_agnt;
+  i2c_agent i2c_slv_agnt;
+  bit [`I2C_AW-1:0] i2c_address;
+  scoreboard scb;
 
 
   function new(string name = "environment", uvm_component parent);
@@ -17,11 +18,13 @@ class environment #(APB_AW=32,APB_DW=32,I2C_AW=7,I2C_DW=8) extends uvm_env;
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     // create APB agent
-    apb_mst_agnt = apb_agent#(APB_AW,APB_DW)::type_id::create("apb_mst_agnt", this);
+    apb_mst_agnt = apb_agent::type_id::create("apb_mst_agnt", this);
     // create I2C agent
-    i2c_slv_agnt = i2c_agent#(I2C_AW,I2C_DW)::type_id::create("i2c_slv_agnt", this);
+    i2c_slv_agnt = i2c_agent::type_id::create("i2c_slv_agnt", this);
     i2c_address = $random;
     uvm_config_db#(uvm_bitstream_t)::set(this, "i2c_slv_agnt.i2c_address", "i2c_address", i2c_address);
+    // create scoreboard
+    scb = scoreboard::type_id::create("scb", this);
   endfunction:build_phase
 
   function void connect_phase(uvm_phase phase);

@@ -14,7 +14,7 @@ parameter DATA_WIDTH = 32
   input       [DATA_WIDTH -1:0]   pwdata  , // Write data
   output                          pready  , // Ready; Indicates that the Slave has completed the transfer
   output reg  [DATA_WIDTH -1:0]   prdata  , // Read data
-  output                          pslverr   // Slave error; Is asserted together with pready if the Slave encountered an error during a transfer
+  output                          pslverr , // Slave error; Is asserted together with pready if the Slave encountered an error during a transfer
 
   // I2C interface
   inout                           scl     , // Serial clock
@@ -46,11 +46,12 @@ wire [15:0] reg_config;       // Registrul de configurare - R/W
                               // bit[0] - SD
 
 wire [15:0] reg_clear_ch;     // Lumina alba - RO
-wire [15:0] reg_red_ch;       // Culoarea rosu - RO
-wire [15:0] reg_green_ch;     // Culoarea verde - RO
-wire [15:0] reg_blue_ch;      // Culoarea albastra - RO
+wire [15:0] reg_red_ch  ;       // Culoarea rosu - RO
+wire [15:0] reg_green_ch   ;     // Culoarea verde - RO
+wire [15:0] reg_blue_ch    ;      // Culoarea albastra - RO
 wire [15:0] reg_infrared_ch;  // Lumina infrarosie - RO
 wire [15:0] reg_seed;         // Seed pentru LFSR - R/W
+wire        reg_freeze;         // Seed pentru LFSR - R/W
 
 
 // Wires
