@@ -35,35 +35,35 @@ class coverage_scoreboard extends uvm_component;
     coverpoint p_scoreboard.reg_clear_ch[15:0]{
       bins minimum_value = {16{1'b0}};
       bins maximum_value = {16{1'b1}};
-      bins some_addresses[3] = {[1:$]}; // Adrese de interes
+      bins some_values[3] = {[1:$]}; // Adrese de interes
     }
 
     // Coverpoint red_ch
     coverpoint p_scoreboard.reg_red_ch[15:0]{
       bins minimum_value = {16{1'b0}};
       bins maximum_value = {16{1'b1}};
-      bins some_addresses[3] = {[1:$]}; // Valori de interes
+      bins some_values[3] = {[1:$]}; // Valori de interes
     }
 
     // Coverpoint green_ch
     coverpoint p_scoreboard.reg_green_ch[15:0]{
       bins minimum_value = {16{1'b0}};
       bins maximum_value = {16{1'b1}};
-      bins some_addresses[3] = {[1:$]}; // Valori de interes
+      bins some_values[3] = {[1:$]}; // Valori de interes
     }
 
     // Coverpoint blue_ch
     coverpoint p_scoreboard.reg_blue_ch[15:0]{
       bins minimum_value = {16{1'b0}};
       bins maximum_value = {16{1'b1}};
-      bins some_addresses[3] = {[1:$]}; // Valori de interes
+      bins some_values[3] = {[1:$]}; // Valori de interes
     }
     
     // Coverpoint infrared_ch
     coverpoint p_scoreboard.reg_infrared_ch[15:0]{
       bins minimum_value = {16{1'b0}};
       bins maximum_value = {16{1'b1}};
-      bins some_addresses[3] = {[1:$]}; // Valori de interes
+      bins some_values[3] = {[1:$]}; // Valori de interes
     }
 
     // Coverpoint seed

@@ -19,10 +19,6 @@ class scoreboard extends uvm_scoreboard;
   i2c_trans i2c_transaction;
   i2c_trans predicted_output;
 
-  // Q for transactions
-  apb_trans all_apb_transactions [$];
-  i2c_trans all_i2c_transactions [$];
-
   bit enable;
   integer i;
 
@@ -68,8 +64,8 @@ function void write_apb(input apb_trans new_apb_transaction);
 if (new_apb_transaction.access == APB_WRITE) begin
 case (new_apb_transaction.addr)
     5'h00 : begin reg_config      <= new_apb_transaction.data;
-                reg_status[0]= ~reg_config[0];
-             end
+                  reg_status[0]    = ~reg_config[0];
+            end
     5'h10 : reg_seed        <= new_apb_transaction.data;
     default: `uvm_warning(get_full_name(), "Invalid adress at write transaction");
 endcase
@@ -102,13 +98,13 @@ function void write_i2c(input i2c_trans new_i2c_transaction);
     reg_infrared_ch = new_i2c_transaction.data[4];
     $display($sformatf("When I2C data was received, enable was %d", enable));
 
-    all_output_i2c_transactions.push_back(new_i2c_transaction.copy()); // save i2c transaction in q
     coverage_collector.config_register.sample(); // Verif Config Register Coverage
     
     // Verif predicted and actual data
-    assert ( new_i2c_transaction.addr   == reg_config[13:7]); // Verif Addr
-    assert ( new_i2c_transaction.nr_words == 5               ); // Verif Acces (Stuck to 1)
-    assert ( new_i2c_transaction.access == 1               ); // Verif Acces (Stuck to 1)
+    assert ( new_i2c_transaction.addr     == reg_config[13:7]); // Verif Addr
+    assert ( new_i2c_transaction.nr_words == 5               ); // Verif Nr Words (Stuck to 5)
+    assert ( new_i2c_transaction.access   == 1               ); // Verif Acces (Stuck to 1)
+
     if (new_i2c_transaction.addr_resp == NACK || new_i2c_transaction.data_resp == NACK)
     reg_status[2] <= 1'b1; else
     reg_status[2] <= 1'b0;
