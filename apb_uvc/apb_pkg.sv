@@ -1,3 +1,5 @@
+`ifndef APB_PKG_SV
+`define APB_PKG_SV
 
 package apb_pkg;
 
@@ -14,3 +16,5 @@ package apb_pkg;
    `include "apb_agent.sv"
     
 endpackage : apb_pkg
+
+`endif

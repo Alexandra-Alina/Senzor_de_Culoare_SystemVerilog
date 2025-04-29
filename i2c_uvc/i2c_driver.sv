@@ -70,12 +70,14 @@ class i2c_driver extends uvm_driver;
       rx_addr <<= 1;
       rx_addr[0] = i2c_vif.s_cb.sda;
     end 
+    @(posedge i2c_vif.s_cb.scl);
     // receive access kind
+    access_kind = i2c_vif.s_cb.sda;
     // nu da ack daca nu e write
     @(negedge i2c_vif.s_cb.scl);
-    // send ACK if received address = agent address, else send NACK
-    `uvm_info(get_type_name(), $sformatf("received address: %h   %b ",rx_addr, (rx_addr == address)), UVM_MEDIUM)
-    i2c_vif.s_cb.sda <= (rx_addr == address) ? 'b0 : 'b1;
+    // send ACK if received address = agent address and access kind = WRITE, else send NACK
+    `uvm_info(get_type_name(), $sformatf("agent address: %h\nreceived address: %h\naccess kind: %b", address, rx_addr, access_kind), UVM_MEDIUM)
+    i2c_vif.s_cb.sda <= ((rx_addr == address) & (access_kind == I2C_WRITE)) ? 'b0 : 'b1;
     `uvm_info(get_type_name(), $sformatf("addr response"), UVM_HIGH)
     @(negedge i2c_vif.s_cb.scl);
     i2c_vif.s_cb.sda <= 'b1;
