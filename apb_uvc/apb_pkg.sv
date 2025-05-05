@@ -14,6 +14,7 @@ package apb_pkg;
    `include "apb_seq_lib.sv"
    `include "apb_driver.sv"
    `include "apb_agent.sv"
+   `include "apb_coverage.sv"
     
 endpackage : apb_pkg
 
