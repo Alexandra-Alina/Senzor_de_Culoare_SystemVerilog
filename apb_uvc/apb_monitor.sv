@@ -12,10 +12,12 @@ class apb_monitor extends uvm_monitor;
   int unsigned transfer_number;     // number of transfers collected
   int unsigned trans_delay;         // delay between last pready (ack) and next psel
 
-  `uvm_component_utils_begin(apb_monitor)
-    `uvm_field_int(transfer_number, UVM_ALL_ON)
-    `uvm_field_int(trans_delay, UVM_ALL_ON)
-  `uvm_component_utils_end
+  `uvm_component_utils(apb_monitor)
+
+  //   `uvm_component_utils_begin(apb_monitor)
+  //   `uvm_field_int(transfer_number, UVM_ALL_ON)
+  //   `uvm_field_int(trans_delay, UVM_ALL_ON)
+  // `uvm_component_utils_end
 
   function new(string name, uvm_component parent);
     super.new(name,parent);

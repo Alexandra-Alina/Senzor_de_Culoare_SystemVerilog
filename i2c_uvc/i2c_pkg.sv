@@ -12,6 +12,7 @@ package i2c_pkg;
   `include "i2c_driver.sv"
   `include "i2c_monitor.sv"
   `include "i2c_agent.sv"
+  `include "i2c_coverage.sv"
   
 endpackage:i2c_pkg
 

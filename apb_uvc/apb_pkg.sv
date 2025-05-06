@@ -1,3 +1,5 @@
+`ifndef APB_PKG_SV
+`define APB_PKG_SV
 
 package apb_pkg;
 
@@ -12,5 +14,8 @@ package apb_pkg;
    `include "apb_seq_lib.sv"
    `include "apb_driver.sv"
    `include "apb_agent.sv"
+   `include "apb_coverage.sv"
     
 endpackage : apb_pkg
+
+`endif

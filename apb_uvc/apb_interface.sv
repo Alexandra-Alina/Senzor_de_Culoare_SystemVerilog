@@ -87,7 +87,7 @@ interface apb_interface #(APB_AW=32,APB_DW=32) (input clk, input rst_n);
 
   // penable doesn't come without psel
   assert property (@(posedge clk) disable iff (!rst_n) penable |-> psel)
-  else $error("APB Interface: !!! penable came without psel !!!");
+    else $error("APB Interface: !!! penable came without psel !!!");
 
 
 endinterface:apb_interface

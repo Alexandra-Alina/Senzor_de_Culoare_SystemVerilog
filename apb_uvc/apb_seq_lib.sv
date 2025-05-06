@@ -1,4 +1,6 @@
-
+`ifndef APB_SEQ_LIB_SV
+`define APB_SEQ_LIB_SV
+  
 class apb_base_seq extends uvm_sequence #(apb_trans);
 
   // Required macro for sequences automation
@@ -136,3 +138,5 @@ class apb_rmw extends apb_base_seq;
     end
   endtask
 endclass : apb_rmw
+
+`endif
