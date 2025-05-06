@@ -73,12 +73,15 @@ wire        clk_out;
 wire        senzor_on;
 wire        data_enable;
 wire        i2c_clk_out;
+wire        sda_en;
+wire        endian;
 
 assign pready     = psel & penable;
 assign pslverr    = pready && ((paddr > 5'h10) || (paddr[0]));
 assign p_valid_wr = psel & penable & pwrite & pready & ~reg_freeze;
 assign lfsr_seed  = ((paddr == ADDR_SEED) & p_valid_wr) ? pwdata[15:0] : 'hz;
 assign senzor_on  = ~reg_config[0];
+assign endian     = reg_config[6];
 
 always @(paddr) begin
   case (paddr)
@@ -120,7 +123,7 @@ registers #(
   .reg_seed         (reg_seed         ),
   .reg_status       (reg_status       )
 );
-/*
+
 clk_generator i2c_clock(
   .rst_n      (rst_n    ),
   .clk_out    (clk_out  )
@@ -131,7 +134,7 @@ clk_divider  i_clk_divider(
   .rst_n        (rst_n              ),
   .clk_config   (reg_config[15:14]  ),
   .i2c_clk_out  (i2c_clk_out),
-  .sda_en       ()
+  .sda_en       (sda_en)
 );
 
 control master_control(
@@ -142,11 +145,18 @@ control master_control(
   .i2c_scl(scl),
   .i2c_sda(sda),
   .clk_config(reg_config[15:14]),
-  .senzor_on(1'b1),
+  .senzor_on(senzor_on),
   .i2c_address(reg_config[13:7]),
+  .sda_en(sda_en),
+  .clear_data(clear_data),
+  .red_data(red_data),
+  .green_data(green_data),
+  .blue_data(blue_data),
+  .infrared_data(infrared_data),
+  .endian(endian),
   .data_enable(data_enable)
 );
-*/
+
 lfsr #(
   .CHOICE(5)
 ) clear_random(
