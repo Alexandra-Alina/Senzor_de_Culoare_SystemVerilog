@@ -141,7 +141,7 @@ always @(*) begin
         bit_count <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b0;
+        sda_out <= 1'b1;
         next_state <= ST_CHECK_RSP_ADDR;
       end else
         next_state <= ST_ADDRESS;
@@ -153,9 +153,10 @@ always @(*) begin
         bit_count <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b0;
+        sda_out <= 1'b1;
         next_state <= ST_CLEAR_DATA_RSP_1;
-      end
+      end else
+        next_state <= ST_CLEAR_DATA_1;
     end
     ST_CLEAR_DATA_2: begin
       if(~(|bit_count)) begin
@@ -163,9 +164,10 @@ always @(*) begin
         bit_count <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b0;
+        sda_out <= 1'b1;
         next_state <= ST_CLEAR_DATA_RSP_2;
-      end
+      end else
+        next_state <= ST_CLEAR_DATA_2;
     end
 
     ST_RED_DATA_1: begin
@@ -174,9 +176,10 @@ always @(*) begin
         bit_count <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b0;
+        sda_out <= 1'b1;
         next_state <= ST_RED_DATA_RSP_1;
-      end
+      end else
+        next_state <= ST_RED_DATA_1;
     end
     ST_RED_DATA_2: begin
       if(~(|bit_count)) begin
@@ -184,9 +187,10 @@ always @(*) begin
         bit_count <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b0;
+        sda_out <= 1'b1;
         next_state <= ST_RED_DATA_RSP_2;
-      end
+      end else
+        next_state <= ST_RED_DATA_2;
     end
 
     ST_GREEN_DATA_1: begin
@@ -195,9 +199,10 @@ always @(*) begin
         bit_count <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b0;
+        sda_out <= 1'b1;
         next_state <= ST_GREEN_DATA_RSP_1;
-      end
+      end else
+        next_state <= ST_GREEN_DATA_1;
     end
     ST_GREEN_DATA_2: begin
       if(~(|bit_count)) begin
@@ -205,9 +210,10 @@ always @(*) begin
         bit_count <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b0;
+        sda_out <= 1'b1;
         next_state <= ST_GREEN_DATA_RSP_2;
-      end
+      end else
+        next_state <= ST_GREEN_DATA_2;
     end
 
     ST_BLUE_DATA_1: begin
@@ -216,9 +222,10 @@ always @(*) begin
         bit_count <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b0;
+        sda_out <= 1'b1;
         next_state <= ST_BLUE_DATA_RSP_1;
-      end
+      end else
+        next_state <= ST_BLUE_DATA_1;
     end
     ST_BLUE_DATA_2: begin
       if(~(|bit_count)) begin
@@ -226,9 +233,10 @@ always @(*) begin
         bit_count <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b0;
+        sda_out <= 1'b1;
         next_state <= ST_BLUE_DATA_RSP_2;
-      end
+      end else
+        next_state <= ST_BLUE_DATA_2;
     end
 
     ST_INFRARED_DATA_1: begin
@@ -237,9 +245,10 @@ always @(*) begin
         bit_count <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b0;
+        sda_out <= 1'b1;
         next_state <= ST_INFRARED_DATA_RSP_1;
-      end
+      end else
+        next_state <= ST_INFRARED_DATA_1;
     end
     ST_INFRARED_DATA_2: begin
       if(~(|bit_count)) begin
@@ -247,9 +256,10 @@ always @(*) begin
         bit_count <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b0;
+        sda_out <= 1'b1;
         next_state <= ST_INFRARED_DATA_RSP_2;
-      end
+      end else
+        next_state <= ST_INFRARED_DATA_2;
     end
   endcase
 end
