@@ -1,4 +1,8 @@
 `include "uvm_macros.svh"
+
+`include "../apb_uvc/apb_trans.sv"
+`include "../i2c_uvc/i2c_trans.sv"
+
 import uvm_pkg::*;
 
 `ifndef __scoreboard
@@ -22,7 +26,7 @@ class scoreboard extends uvm_scoreboard;
   bit enable;
   integer i;
 
-  coverage_scorboard coverage_collector;
+  coverage_scoreboard coverage_collector;
 
 // Registrii DUT  
 logic [15:0] reg_config     ; // adresa #00
@@ -55,7 +59,7 @@ endfunction
 
 // WRITE APB
 function void write_apb(input apb_trans new_apb_transaction);  
-    `uvm_info("SCOREBOARD", $sformatf("Received an APB transaction:\n"), UVM_LOW)
+    `uvm_info("SCOREBOARD", $sformatf("Received an APB transaction:\n"), UVM_LOW);
     new_apb_transaction.sprint(); // print?
 
     $display($sformatf("When APB data was received, enable was %d", enable));
@@ -63,12 +67,14 @@ function void write_apb(input apb_trans new_apb_transaction);
 // Stocare si verificare registrii DUT
 if (new_apb_transaction.access == APB_WRITE) begin
 case (new_apb_transaction.addr)
-    5'h00 : begin reg_config      <= new_apb_transaction.data;
-                  reg_status[0]    = ~reg_config[0];
-            end
-    5'h10 : reg_seed        <= new_apb_transaction.data;
-    default: `uvm_warning(get_full_name(), "Invalid adress at write transaction");
+    5'h00 : begin 
+        reg_config      <= new_apb_transaction.data;
+        reg_status[0]   <= ~reg_config[0];  
+    end
+    5'h10 : reg_seed <= new_apb_transaction.data;
+    default: `uvm_warning(get_full_name(), "Invalid address at write transaction");
 endcase
+
 
     coverage_collector.config_register.sample(); // Verif Config Register Coverage
 end else
@@ -87,7 +93,7 @@ endfunction : write_apb
 
 // WRITE I2C
 function void write_i2c(input i2c_trans new_i2c_transaction);  
-    `uvm_info("SCOREBOARD", $sformatf("Received an I2C transaction:\n"), UVM_LOW)
+    `uvm_info("SCOREBOARD", $sformatf("Received an I2C transaction:\n"), UVM_LOW);
     new_i2c_transaction.sprint(); // print?
 
     // Write registers with I2C colour data

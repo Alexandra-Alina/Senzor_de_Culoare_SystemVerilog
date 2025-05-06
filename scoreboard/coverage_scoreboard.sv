@@ -19,8 +19,8 @@ class coverage_scoreboard extends uvm_component;
     // Coverpoint reg_config 
     coverpoint p_scoreboard.reg_config[15:14]; // FREQ     00 -> 100KHz, 01 -> 400KHz, 10 -> 1Mhz,  11 -> 3.4Mhz  
     coverpoint p_scoreboard.reg_config[13:7]{  // ADDR
-      bins minimum_address = {7{1'b0}};
-      bins maximum_address = {7{1'b1}};
+      bins minimum_address = {0};
+      bins maximum_address = {7'b1111111};
       bins some_addresses[3] = {[1:$]};
     }
     coverpoint p_scoreboard.reg_config[6]; // ENDIAN       0 -> Little Endian, 1 -> Big Endian
@@ -33,43 +33,43 @@ class coverage_scoreboard extends uvm_component;
 
     // Coverpoint clear_ch
     coverpoint p_scoreboard.reg_clear_ch[15:0]{
-      bins minimum_value = {16{1'b0}};
-      bins maximum_value = {16{1'b1}};
+      bins minimum_value = {0};
+      bins maximum_value = {16'b1111111111111111};
       bins some_values[3] = {[1:$]}; // Adrese de interes
     }
 
     // Coverpoint red_ch
     coverpoint p_scoreboard.reg_red_ch[15:0]{
-      bins minimum_value = {16{1'b0}};
-      bins maximum_value = {16{1'b1}};
+      bins minimum_value = {0};
+      bins maximum_value = {16'b1111111111111111};
       bins some_values[3] = {[1:$]}; // Valori de interes
     }
 
     // Coverpoint green_ch
     coverpoint p_scoreboard.reg_green_ch[15:0]{
-      bins minimum_value = {16{1'b0}};
-      bins maximum_value = {16{1'b1}};
+      bins minimum_value = {0};
+      bins maximum_value = {16'b1111111111111111};
       bins some_values[3] = {[1:$]}; // Valori de interes
     }
 
     // Coverpoint blue_ch
     coverpoint p_scoreboard.reg_blue_ch[15:0]{
-      bins minimum_value = {16{1'b0}};
-      bins maximum_value = {16{1'b1}};
+      bins minimum_value = {0};
+      bins maximum_value = {16'b1111111111111111};
       bins some_values[3] = {[1:$]}; // Valori de interes
     }
     
     // Coverpoint infrared_ch
     coverpoint p_scoreboard.reg_infrared_ch[15:0]{
-      bins minimum_value = {16{1'b0}};
-      bins maximum_value = {16{1'b1}};
+      bins minimum_value = {0};
+      bins maximum_value = {16'b1111111111111111};
       bins some_values[3] = {[1:$]}; // Valori de interes
     }
 
     // Coverpoint seed
     coverpoint p_scoreboard.reg_seed[15:0]{
-      bins minimum_value = {16{1'b0}};
-      bins maximum_value = {16{1'b1}};
+      bins minimum_value = {0};
+      bins maximum_value = {16'b1111111111111111};
       bins some_values[3] = {[1:$]}; // Valori de interes
     }
    
