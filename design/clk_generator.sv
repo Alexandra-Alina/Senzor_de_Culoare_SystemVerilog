@@ -8,7 +8,7 @@ always @(negedge rst_n)
 
 
 always @(*) begin
-  #0.5ns  clk_out <= ~clk_out; // 1GHz frequency
+  #1ns  clk_out <= ~clk_out; // 1GHz frequency
 end
 
 /*

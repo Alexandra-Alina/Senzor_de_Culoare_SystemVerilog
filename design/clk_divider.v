@@ -1,18 +1,18 @@
 module clk_divider (
-  input       clk_in        , // 1GHz clock 
+  input       clk_in        , // 500MHz clock 
   input       rst_n         , // 
   input [1:0] clk_config    , //
   output reg  i2c_clk_out   , //
   output reg  sda_en          //
 );
 
-localparam DIV_100KHZ = 5000;
-localparam DIV_400KHZ = 1250;
-localparam DIV_1MHZ   = 500;
-localparam DIV_3_4MHZ = 147;
+localparam DIV_100KHZ = 25;   // 5000
+localparam DIV_400KHZ = 6; // 1250
+localparam DIV_1MHZ   = 4;    // 500
+localparam DIV_3_4MHZ = 3; // 147
 
-reg [12:0]  counter;
-reg [12:0]  divider_value;
+reg [6:0]  counter;
+reg [6:0]  divider_value;
 
 always @(clk_config) begin
   case(clk_config)
