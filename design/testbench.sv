@@ -1,9 +1,11 @@
 
 `include "../apb_uvc/apb_interface.sv"
+`include "../apb_uvc/apb_pkg.sv"
+
 `include "../i2c_uvc/i2c_interface.sv"
 `include "../i2c_uvc/i2c_pkg.sv"
-`include "../apb_uvc/apb_pkg.sv"
-// `include "../tests/test_pkg.sv"
+
+`include "test_pkg.sv"
 // `include "../scoreboard/scb_pkg.sv"
 
 module testbench;
@@ -13,7 +15,7 @@ module testbench;
 
   import apb_pkg::*;
   import i2c_pkg::*;
-  // import test_pkg::*;
+ // import test_pkg::*;
   // import scb_pkg::*;
 
 // Localparameteres

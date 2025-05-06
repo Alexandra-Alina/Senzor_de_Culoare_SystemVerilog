@@ -3,9 +3,9 @@
 
 class apb_coverage extends uvm_subscriber#(apb_trans);
 
-    `uvm_component_utils(apb_cov)
+    `uvm_component_utils(apb_coverage)
 
-    covergroup apb_packet_cg with function sample(apb_seq_item apb_item);
+    covergroup apb_packet_cg with function sample(apb_trans apb_item);
 
         setup_delay_cp :coverpoint apb_item.trans_delay {
             bins NO_DELAY     = {0};
@@ -51,7 +51,7 @@ class apb_coverage extends uvm_subscriber#(apb_trans);
     endfunction : new
 
 
-    virtual function void write(apt_trans t);
+    virtual function void write(apb_trans t);
         apb_packet_cg.sample(t);
     endfunction : write
 

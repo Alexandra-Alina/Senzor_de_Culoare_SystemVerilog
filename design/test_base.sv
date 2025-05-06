@@ -1,9 +1,7 @@
 //se includ fisierele la care testul trebuie sa aiba acces
-`include "environment.sv"
-
-`include "apb_seq_lib.sv"
-
-`include "secventa_senzor_temperatura.sv"
+`include "./../environment.sv"
+`include "./../apb_uvc/apb_seq_lib.sv"
+//`include "./../secventa_senzor_temperatura.sv"
 
 
 class test_base extends uvm_test;
@@ -78,7 +76,7 @@ class test_base extends uvm_test;
      `ifdef DEBUG
         $display("va incepe sa ruleze secventa: fast_switch_seq pentru agentul activ agent_buton");
       `endif; 
-     	apb_5_packets_seq.start(env.agent_buton_din_mediu.apb_seqr);
+     	apb_5_packets_seq.start(env.apb_mst_agnt.apb_seqr);
       `ifdef DEBUG
         $display("s-a terminat de rulat secventa pentru agentul activ agent_buton");
       `endif;
@@ -121,7 +119,7 @@ class test_base extends uvm_test;
   virtual function void report_phase(uvm_phase phase);
     uvm_report_server svr;
     super.report_phase(phase);
-    $display("STDOUT: Valorile de coverage obtinute pentru senzor sunt: %3.2f%% ",  		   env.scb.coverage_collector.config_register.get_inst_coverage());
+   // $display("STDOUT: Valorile de coverage obtinute pentru senzor sunt: %3.2f%% ",  		   env.scb.coverage_collector.config_register.get_inst_coverage());
     
     // $display("STDOUT: Valorile de coverage obtinute pentru buton sunt: %3.2f%% ",  		   mediu_de_verificare_ambient.agent_buton_din_mediu.monitor_agent_buton_inst0.colector_coverage_buton_inst.buton_cg.get_inst_coverage());
     
