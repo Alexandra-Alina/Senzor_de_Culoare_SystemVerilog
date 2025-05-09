@@ -4,7 +4,7 @@
 class i2c_monitor extends uvm_monitor;
 
   uvm_analysis_port #(i2c_trans) i2c_port;
-  virtual i2c_interface i2c_vif;
+  virtual i2c_interface i2c_vif; 
 
   protected i2c_trans i2c_trans;
 

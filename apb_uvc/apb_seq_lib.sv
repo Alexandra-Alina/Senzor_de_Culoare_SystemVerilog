@@ -1,11 +1,15 @@
 `ifndef APB_SEQ_LIB_SV
 `define APB_SEQ_LIB_SV
   
-class apb_base_seq extends uvm_sequence #(apb_trans);
+   `include "apb_defines.sv"
+   `include "apb_types.sv"
+   `include "apb_trans.sv"
+class apb_base_seq extends uvm_sequence;
 
   // Required macro for sequences automation
   `uvm_object_utils(apb_base_seq)
 
+  apb_trans req;
   function new(string name="apb_base_seq");
     super.new(name);
   endfunction

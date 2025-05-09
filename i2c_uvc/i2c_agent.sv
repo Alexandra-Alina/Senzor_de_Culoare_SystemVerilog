@@ -9,6 +9,7 @@ class i2c_agent extends uvm_agent;
 
   i2c_driver    i2c_drv ;
   i2c_monitor   i2c_mon;
+  i2c_coverage  i2c_cov;
 
   function new(string name = "i2c_agent", uvm_component parent);
     super.new(name, parent);
@@ -21,11 +22,13 @@ class i2c_agent extends uvm_agent;
            
     i2c_mon = i2c_monitor::type_id::create("i2c_mon", this);
     i2c_drv = i2c_driver::type_id::create("i2c_drv", this);
+    i2c_cov = i2c_coverage::type_id::create("i2c_coverage", this);
   endfunction:build_phase
 
   function void connect_phase(uvm_phase phase);
     super.connect_phase(phase);
     i2c_drv.address = i2c_address;
+    i2c_mon.i2c_port.connect(i2c_cov.analysis_export);
   endfunction:connect_phase
 
 endclass:i2c_agent

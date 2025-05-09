@@ -9,7 +9,7 @@ class i2c_driver extends uvm_driver;
     `uvm_field_int(address, UVM_ALL_ON)
   `uvm_component_utils_end
 
-  virtual interface i2c_interface i2c_vif;
+  virtual i2c_interface i2c_vif;  
 
   function new(string name,uvm_component parent = null);
     super.new(name,parent);
@@ -18,7 +18,7 @@ class i2c_driver extends uvm_driver;
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     
-    if (!uvm_config_db#(virtual i2c_interface)::get(this,"","i2c_vif", i2c_vif))
+    if (!uvm_config_db#(virtual i2c_interface)::get(this,"","i2c_vif", i2c_vif)) 
       `uvm_fatal(get_type_name(), {"Virtual interface must be set for: ",get_full_name(),".i2c_vif"})
   endfunction:build_phase
 

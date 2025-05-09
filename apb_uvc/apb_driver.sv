@@ -6,7 +6,7 @@ class apb_driver extends uvm_driver #(apb_trans);
 
   `uvm_component_utils(apb_driver)
 
-  virtual interface apb_interface apb_vif;
+  virtual apb_interface#(`APB_AW, `APB_DW) apb_vif;
 
   function new(string name,uvm_component parent = null);
     super.new(name,parent);
@@ -15,7 +15,7 @@ class apb_driver extends uvm_driver #(apb_trans);
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
     
-    if (!uvm_config_db#(virtual apb_interface)::get(this,"","apb_vif", apb_vif)) begin
+    if (!uvm_config_db#(virtual apb_interface#(`APB_AW, `APB_DW))::get(this,"","apb_vif", apb_vif)) begin
       `uvm_fatal(get_type_name(), {"Virtual interface must be set for: ",get_full_name(),".apb_vif"})
     end
   endfunction:build_phase

@@ -91,11 +91,11 @@ assign i2c_vif.sda = sda;
 
 initial begin
 
-  uvm_config_db #(virtual interface apb_interface#(TEST_ADDR_WIDTH,TEST_DATA_WIDTH))::set(null,"*.env.apb_mst_agnt.*", "apb_vif", apb_vif);
+  uvm_config_db #(virtual interface apb_interface#(TEST_ADDR_WIDTH,TEST_DATA_WIDTH))::set(null,"*", "apb_vif", apb_vif);
   
   uvm_config_db #(virtual interface i2c_interface)::set(null, "*.env.i2c_slv_agnt.*", "i2c_vif", i2c_vif);
 
-  run_test();
+  run_test("test_base");
 end
 
 endmodule

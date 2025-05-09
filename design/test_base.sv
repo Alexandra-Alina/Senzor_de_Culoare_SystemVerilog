@@ -1,3 +1,6 @@
+`ifndef TEST_BASE_SV
+`define TEST_BASE_SV
+
 //se includ fisierele la care testul trebuie sa aiba acces
 `include "./../environment.sv"
 `include "./../apb_uvc/apb_seq_lib.sv"
@@ -24,7 +27,7 @@ class test_base extends uvm_test;
   
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-
+`uvm_warning("","TEST BUILD\n\n");
     env = environment::type_id::create("env", this);
     
     //Se creaza secventele de date de intrare (in cazul de fata avem doar o secventa, deoarece avem doar un agent activ), dandu-se apoi valori aleatoare campurilor declarate cu cuvantul cheie "rand" din interiorul clasei "secventa_intrari"
@@ -59,7 +62,7 @@ class test_base extends uvm_test;
   endfunction
   
   virtual task run_phase(uvm_phase phase);
-    
+    `uvm_warning("","TEST RUN\n\n");
     //se apeleaza functia run_phase din clasa parinte
     super.run_phase(phase);
     
@@ -154,3 +157,6 @@ class test_base extends uvm_test;
   endfunction:end_of_elaboration_phase
 
 endclass
+
+
+`endif

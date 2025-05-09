@@ -27,7 +27,7 @@ class environment extends uvm_env;
     // create I2C agent
     i2c_slv_agnt = i2c_agent::type_id::create("i2c_slv_agnt", this);
     i2c_address = $random;
-    uvm_config_db#(uvm_bitstream_t)::set(this, "i2c_slv_agnt.i2c_address", "i2c_address", i2c_address);
+    uvm_config_db#(uvm_bitstream_t)::set(this, "i2c_slv_agnt", "i2c_address", i2c_address);
     // create scoreboard
     //scb = scoreboard::type_id::create("scb", this);
   endfunction:build_phase

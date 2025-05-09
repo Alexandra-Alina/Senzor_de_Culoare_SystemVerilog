@@ -1,10 +1,13 @@
 `ifndef APB_MONITOR_SV
 `define APB_MONITOR_SV
 
+  `include "uvm_macros.svh"
+  import uvm_pkg::*;
+
 class apb_monitor extends uvm_monitor;
 
   uvm_analysis_port #(apb_trans) apb_port;
-  virtual apb_interface  apb_vif;
+  virtual apb_interface#(`APB_AW, `APB_DW) apb_vif;
 
   apb_trans apb_trans;
   
@@ -14,10 +17,6 @@ class apb_monitor extends uvm_monitor;
 
   `uvm_component_utils(apb_monitor)
 
-  //   `uvm_component_utils_begin(apb_monitor)
-  //   `uvm_field_int(transfer_number, UVM_ALL_ON)
-  //   `uvm_field_int(trans_delay, UVM_ALL_ON)
-  // `uvm_component_utils_end
 
   function new(string name, uvm_component parent);
     super.new(name,parent);
@@ -26,7 +25,7 @@ class apb_monitor extends uvm_monitor;
 
   function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    if (!uvm_config_db#(virtual apb_interface)::get(this,"","apb_vif", apb_vif)) begin
+    if (!uvm_config_db#(virtual apb_interface#(`APB_AW, `APB_DW))::get(this,"","apb_vif", apb_vif)) begin
       `uvm_fatal(get_type_name(), {"Virtual interface must be set for: ",get_full_name(),".apb_vif"})       
     end
   endfunction:build_phase
