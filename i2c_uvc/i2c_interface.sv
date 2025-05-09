@@ -4,8 +4,8 @@
 interface i2c_interface (input clk, input rst_n);
 
   // Signals
-  triand scl; // serial clock
-  triand sda; // serial data
+  logic scl; // serial clock
+  logic sda; // serial data
   
   reg stable_assertion_enable; // set when SCL is HIGH
   reg trans_enable           ; // set when a transfer happens
