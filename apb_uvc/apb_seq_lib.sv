@@ -165,7 +165,7 @@ class registers_seq extends apb_base_seq;
       req = null; //Important: reset req to force new transaction
       `uvm_do_with(req, { req.access == APB_WRITE;
                           req.addr   == addr[i];
-                          req.data   == $urandom_range(0, 255);})
+                          req.data   == $random;})
     end
 
     // read back values
@@ -177,4 +177,26 @@ class registers_seq extends apb_base_seq;
   endtask:body
 
 endclass:registers_seq
+
+class color_disable_seq extends apb_base_seq;
+
+  `uvm_object_utils(color_disable_seq)
+  
+  bit [4:0] color_disable;
+  
+  function new(string name="color_disable_seq");
+    super.new(name);
+  endfunction:new
+  
+  virtual task body();
+    repeat(10) begin
+      color_disable = $random;
+      `uvm_do_with(req, { req.access == APB_WRITE;
+                          req.addr   == 'h0;
+                          req.data   == {2'b10, 7'h16, color_disable, 1'b0};})
+    end
+    #200ns;
+  endtask:body
+
+endclass:color_disable_seq
 `endif
