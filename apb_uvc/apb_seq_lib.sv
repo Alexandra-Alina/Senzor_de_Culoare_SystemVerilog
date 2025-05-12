@@ -147,7 +147,7 @@ class registers_seq extends apb_base_seq;
 
   `uvm_object_utils(registers_seq)
 
-  bit [5:0] addr [7:0] = {'h0, 'h2, 'h4, 'h6, 'h8, 'hC, 'h10, 'h12};
+  //bit [5:0] addr [7:0] = {'h0, 'h2, 'h4, 'h6, 'h8, 'hC, 'h10, 'h12};
 
   function new(string name="registers_seq");
     super.new(name);
@@ -155,25 +155,63 @@ class registers_seq extends apb_base_seq;
   
   virtual task body();
     // read default values
-    foreach (addr[i]) begin
+   // foreach (addr[i]) begin
       `uvm_do_with(req, { req.access == APB_READ;
-                          req.addr   == addr[i];})
-    end
+                          req.addr   == 'h0;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'h2;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'h4;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'h6;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'h8;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'hC;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'h10;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'h12;})
+
+   // end
 
     // write random values
-    foreach (addr[i]) begin
-      req = null; //Important: reset req to force new transaction
+   // foreach (addr[i]) begin
       `uvm_do_with(req, { req.access == APB_WRITE;
-                          req.addr   == addr[i];
-                          req.data   == $random;})
-    end
+                          req.addr   == 'h0;})
+      `uvm_do_with(req, { req.access == APB_WRITE;
+                          req.addr   == 'h2;})
+      `uvm_do_with(req, { req.access == APB_WRITE;
+                          req.addr   == 'h4;})
+      `uvm_do_with(req, { req.access == APB_WRITE;
+                          req.addr   == 'h6;})
+      `uvm_do_with(req, { req.access == APB_WRITE;
+                          req.addr   == 'h8;})
+      `uvm_do_with(req, { req.access == APB_WRITE;
+                          req.addr   == 'hC;})
+      `uvm_do_with(req, { req.access == APB_WRITE;
+                          req.addr   == 'h10;})
+      `uvm_do_with(req, { req.access == APB_WRITE;
+                          req.addr   == 'h12;})
+   // end
 
     // read back values
-    foreach (addr[i]) begin
-      req = null; 
       `uvm_do_with(req, { req.access == APB_READ;
-                          req.addr   == addr[i];})
-    end
+                          req.addr   == 'h0;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'h2;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'h4;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'h6;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'h8;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'hC;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'h10;})
+      `uvm_do_with(req, { req.access == APB_READ;
+                          req.addr   == 'h12;})
   endtask:body
 
 endclass:registers_seq

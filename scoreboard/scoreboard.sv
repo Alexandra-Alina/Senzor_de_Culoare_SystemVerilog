@@ -53,7 +53,7 @@ endfunction
   
 virtual function void connect_phase (uvm_phase phase); // Environment Connect
     super.connect_phase(phase);
-    coverage_collector.p_scoreboard = this; // Coverage Collector Connect
+    //coverage_collector.p_scoreboard = this; // Coverage Collector Connect
 endfunction
   
 virtual function void build_phase(uvm_phase phase); // Environment Build
@@ -79,7 +79,7 @@ case (new_apb_transaction.addr)
 endcase
 
 
-    coverage_collector.config_register.sample(); // Verif Config Register Coverage
+   // coverage_collector.config_register.sample(); // Verif Config Register Coverage
 end else
 case (new_apb_transaction.addr)
     5'h00 : assert( reg_config      == new_apb_transaction.data );
@@ -107,7 +107,7 @@ function void write_i2c(input i2c_trans new_i2c_transaction);
     reg_infrared_ch = new_i2c_transaction.data[4];
     $display($sformatf("When I2C data was received, enable was %d", enable));
 
-    coverage_collector.config_register.sample(); // Verif Config Register Coverage
+   // coverage_collector.config_register.sample(); // Verif Config Register Coverage
     
     // Verif predicted and actual data
     assert ( new_i2c_transaction.addr     == reg_config[13:7]); // Verif Addr

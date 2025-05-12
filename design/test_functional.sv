@@ -1,3 +1,7 @@
+`ifndef TEST_FUNCTIONAL_SV
+`define TEST_FUNCTIONAL_SV
+
+
 `include "./../environment.sv"
 `include "./../apb_uvc/apb_seq_lib.sv"
 
@@ -17,7 +21,7 @@ class test_functional extends test_base;
 
 
   virtual function void build_phase(uvm_phase phase);
-    super.build_phase(phase);
+    //super.build_phase(phase);
 
   //  uvm_config_db #(uvm_object_wrapper)::set(this,"env.apb_mst_agnt.apb_seqr.run_phase", "default_sequence", registers_seq::get_type());
     env = environment::type_id::create("env", this);
@@ -28,12 +32,22 @@ class test_functional extends test_base;
   endfunction:build_phase
 
   virtual task run_phase(uvm_phase phase);
-    super.run_phase(phase);
+    //super.run_phase(phase);
     phase.raise_objection(this);
 
     `uvm_info("FUNCTIONAL_BASE", "real execution begins", UVM_NONE);
+    #1000
 
-    apb_color_disable_seq.start(env.apb_mst_agnt.apb_seqr);
+      begin
+     `ifdef DEBUG
+        $display("va incepe sa ruleze secventa: fast_switch_seq pentru agentul activ agent_buton");
+      `endif; 
+     	apb_color_disable_seq.start(env.apb_mst_agnt.apb_seqr);
+      `ifdef DEBUG
+        $display("s-a terminat de rulat secventa pentru agentul activ agent_buton");
+      `endif;
+      end
+
 
     #100
     phase.drop_objection(this);
@@ -41,7 +55,7 @@ class test_functional extends test_base;
 
   virtual function void report_phase(uvm_phase phase);
     uvm_report_server svr;
-    super.report_phase(phase);
+   // super.report_phase(phase);
   //  $display("STDOUT: Valorile de coverage obtinute pentru senzor sunt: %3.2f%% ",  		   env.apb_mst_agnt.apb_cov.get_inst_coverage());
     
     // $display("STDOUT: Valorile de coverage obtinute pentru buton sunt: %3.2f%% ",  		   mediu_de_verificare_ambient.agent_buton_din_mediu.monitor_agent_buton_inst0.colector_coverage_buton_inst.buton_cg.get_inst_coverage());
@@ -77,3 +91,5 @@ class test_functional extends test_base;
   endfunction:end_of_elaboration_phase
 
 endclass:test_functional
+
+`endif 

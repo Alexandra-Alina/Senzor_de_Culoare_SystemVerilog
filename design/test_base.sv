@@ -74,7 +74,7 @@ class test_base extends uvm_test;
     `uvm_info("TEST_BASE", "real execution begins", UVM_NONE);
     
     //in bulca fork join se pot porni in paralel secventele mediului de verificare
-    
+
       begin
      `ifdef DEBUG
         $display("va incepe sa ruleze secventa: fast_switch_seq pentru agentul activ agent_buton");

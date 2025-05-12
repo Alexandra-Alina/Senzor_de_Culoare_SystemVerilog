@@ -1,3 +1,8 @@
+`ifndef TEST_REGISTERS_SV
+`define TEST_REGISTERS_SV
+
+
+
 `include "./../environment.sv"
 `include "./../apb_uvc/apb_seq_lib.sv"
 
@@ -32,15 +37,27 @@ class test_registers extends test_base;
     phase.raise_objection(this);
 
     `uvm_info("TEST_REGISTER", "real execution begins", UVM_NONE);
+    #1000
 
-    apb_registers_seq.start(env.apb_mst_agnt.apb_seqr);
+      begin
+     `ifdef DEBUG
+        $display("va incepe sa ruleze secventa: fast_switch_seq pentru agentul activ agent_buton");
+      `endif; 
+     	apb_registers_seq.start(env.apb_mst_agnt.apb_seqr);
+      `ifdef DEBUG
+        $display("s-a terminat de rulat secventa pentru agentul activ agent_buton");
+      `endif;
+      end
+
+
+   // apb_registers_seq.start(env.apb_mst_agnt.apb_seqr);
 
     #100
     phase.drop_objection(this);
     endtask
 
   virtual function void report_phase(uvm_phase phase);
-    uvm_report_server svr;
+   // uvm_report_server svr;
     super.report_phase(phase);
   //  $display("STDOUT: Valorile de coverage obtinute pentru senzor sunt: %3.2f%% ",  		   env.apb_mst_agnt.apb_cov.get_inst_coverage());
     
@@ -77,3 +94,6 @@ class test_registers extends test_base;
   endfunction:end_of_elaboration_phase
 
 endclass:test_registers
+
+
+`endif 

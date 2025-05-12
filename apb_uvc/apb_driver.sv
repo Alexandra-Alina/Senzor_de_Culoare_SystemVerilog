@@ -26,11 +26,11 @@ class apb_driver extends uvm_driver #(apb_trans);
 
   task run_phase(uvm_phase phase);
     super.run_phase(phase);
-      `uvm_warning(get_type_name(), "\n\nWAIT RESET");
 
     forever begin
       //Initial reset
       if (!apb_vif.rst_n) begin
+        `uvm_warning(get_type_name(), "\n\nWAIT RESET");
         @(posedge apb_vif.rst_n);
       end
 
