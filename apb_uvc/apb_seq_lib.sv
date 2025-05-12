@@ -148,7 +148,7 @@ class registers_seq extends apb_base_seq;
   `uvm_object_utils(registers_seq)
 
   bit [5:0] addr [7:0] = {'h0, 'h2, 'h4, 'h6, 'h8, 'hC, 'h10, 'h12};
-  
+
   function new(string name="registers_seq");
     super.new(name);
   endfunction:new
@@ -162,6 +162,7 @@ class registers_seq extends apb_base_seq;
 
     // write random values
     foreach (addr[i]) begin
+      req = null; //Important: reset req to force new transaction
       `uvm_do_with(req, { req.access == APB_WRITE;
                           req.addr   == addr[i];
                           req.data   == $urandom_range(0, 255);})
@@ -169,10 +170,10 @@ class registers_seq extends apb_base_seq;
 
     // read back values
     foreach (addr[i]) begin
+      req = null; 
       `uvm_do_with(req, { req.access == APB_READ;
                           req.addr   == addr[i];})
     end
-    #200ns;
   endtask:body
 
 endclass:registers_seq
