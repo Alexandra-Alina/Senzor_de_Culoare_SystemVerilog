@@ -6,7 +6,6 @@
 `include "../i2c_uvc/i2c_pkg.sv"
 
 `include "test_pkg.sv"
-// `include "../scoreboard/scb_pkg.sv"
 
 module testbench;
 
@@ -15,8 +14,6 @@ module testbench;
 
   import apb_pkg::*;
   import i2c_pkg::*;
- // import test_pkg::*;
-  // import scb_pkg::*;
 
 // Localparameteres
 localparam TEST_ADDR_WIDTH = 5;
