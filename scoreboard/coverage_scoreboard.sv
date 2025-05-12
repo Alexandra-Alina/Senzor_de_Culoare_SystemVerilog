@@ -1,14 +1,14 @@
-`include "uvm_macros.svh"
-import uvm_pkg::*;
-
 `ifndef __scoreboard_coverage_collector
 `define __scoreboard_coverage_collector
+
+`include "uvm_macros.svh"
+import uvm_pkg::*;
 
 //aceasta clasa este folosita pentru a se vedea cate combinatii de intrari au fost trimise DUT-ului; aceasta clasa este doar de model, si probabil va fi modificata, deoarece in general nu ne intereseaza sa obtinem in simulare toate combinatiile posibile de intrari ale unui DUT
 class coverage_scoreboard extends uvm_component;
   
   //componenta se adauga in baza de date
-  `uvm_component_utils(coverage_scorboard)
+  `uvm_component_utils(coverage_scoreboard)
   
   //se declara pointerul catre monitorul care da datele asupra carora se vor face masuratorile de coverage
   scoreboard p_scoreboard;

@@ -1,6 +1,9 @@
 `ifndef APB_COVERAGE_SV
 `define APB_COVERAGE_SV
 
+import apb_pkg::*;
+`include "uvm_macros.svh"
+
 class apb_coverage extends uvm_subscriber#(apb_trans);
 
     `uvm_component_utils(apb_coverage)

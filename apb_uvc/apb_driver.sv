@@ -2,6 +2,9 @@
 `ifndef APB_DRIVER_SV
 `define APB_DRIVER_SV
 
+import apb_pkg::*;
+`include "uvm_macros.svh"
+
 class apb_driver extends uvm_driver #(apb_trans);
 
   `uvm_component_utils(apb_driver)

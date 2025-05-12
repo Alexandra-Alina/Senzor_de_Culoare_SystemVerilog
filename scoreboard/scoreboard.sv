@@ -1,12 +1,13 @@
+`ifndef __scoreboard
+`define __scoreboard
+
 `include "uvm_macros.svh"
 
 `include "../apb_uvc/apb_trans.sv"
 `include "../i2c_uvc/i2c_trans.sv"
+`include "./coverage_scoreboard.sv"
 
 import uvm_pkg::*;
-
-`ifndef __scoreboard
-`define __scoreboard
 
 `uvm_analysis_imp_decl(_apb) // apb
 `uvm_analysis_imp_decl(_i2c) // i2c
@@ -59,7 +60,7 @@ endfunction
 
 // WRITE APB
 function void write_apb(input apb_trans new_apb_transaction);  
-    `uvm_info("SCOREBOARD", $sformatf("Received an APB transaction:\n"), UVM_LOW);
+    `uvm_info("SCOREBOARD", $sformatf("Received an APB transaction:\n"), UVM_LOW)
     new_apb_transaction.sprint(); // print?
 
     $display($sformatf("When APB data was received, enable was %d", enable));
@@ -72,7 +73,7 @@ case (new_apb_transaction.addr)
         reg_status[0]   <= ~reg_config[0];  
     end
     5'h10 : reg_seed <= new_apb_transaction.data;
-    default: `uvm_warning(get_full_name(), "Invalid address at write transaction");
+    default: `uvm_warning(get_full_name(), "Invalid address at write transaction")
 endcase
 
 
@@ -87,13 +88,13 @@ case (new_apb_transaction.addr)
     5'h0C : assert( reg_infrared_ch == new_apb_transaction.data );
     5'h10 : assert( reg_seed        == new_apb_transaction.data );
     5'h12 : assert( reg_status      == new_apb_transaction.data );
-    default: `uvm_warning(get_full_name(), "Invalid adress at read transaction");
+    default: `uvm_warning(get_full_name(), "Invalid adress at read transaction")
 endcase
 endfunction : write_apb
 
 // WRITE I2C
 function void write_i2c(input i2c_trans new_i2c_transaction);  
-    `uvm_info("SCOREBOARD", $sformatf("Received an I2C transaction:\n"), UVM_LOW);
+    `uvm_info("SCOREBOARD", $sformatf("Received an I2C transaction:\n"), UVM_LOW)
     new_i2c_transaction.sprint(); // print?
 
     // Write registers with I2C colour data
