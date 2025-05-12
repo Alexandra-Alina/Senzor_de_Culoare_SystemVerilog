@@ -1,6 +1,9 @@
 `ifndef I2C_MONITOR_SV
 `define I2C_MONITOR_SV
 
+  `include "uvm_macros.svh"
+  import uvm_pkg::*;
+  import i2c_pkg::*;
 class i2c_monitor extends uvm_monitor;
 
   uvm_analysis_port #(i2c_trans) i2c_port;

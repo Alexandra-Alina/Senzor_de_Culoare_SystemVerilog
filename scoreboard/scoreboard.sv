@@ -3,11 +3,13 @@
 
 `include "uvm_macros.svh"
 
-`include "../apb_uvc/apb_trans.sv"
-`include "../i2c_uvc/i2c_trans.sv"
+// `include "../apb_uvc/apb_trans.sv"
+// `include "../i2c_uvc/i2c_trans.sv"
 `include "./coverage_scoreboard.sv"
 
 import uvm_pkg::*;
+import apb_pkg::*;
+import i2c_pkg::*;
 
 `uvm_analysis_imp_decl(_apb) // apb
 `uvm_analysis_imp_decl(_i2c) // i2c
