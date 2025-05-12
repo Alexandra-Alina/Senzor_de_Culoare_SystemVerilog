@@ -1,28 +1,28 @@
 module registers #(
-  parameter REG_WIDTH   = 16,
-  parameter DATA_WIDTH  = 32,
-  parameter ADDR_WIDTH  = 5
+  parameter REG_WIDTH   = 16, // Width of each individual register
+  parameter DATA_WIDTH  = 32, // Width of the input data bus
+  parameter ADDR_WIDTH  = 5   // Width of the register address bus
 ) (
-  input                         clk               , //
-  input                         rst_n             , //  
-  input       [DATA_WIDTH -1:0] pwdata            , //
-  input       [ADDR_WIDTH -1:0] paddr             , //
-  input                         p_valid_wr        , //
-  input       [REG_WIDTH -1:0]  clear_data        , //
-  input       [REG_WIDTH -1:0]  red_data          , //
-  input       [REG_WIDTH -1:0]  green_data        , //
-  input       [REG_WIDTH -1:0]  blue_data         , //
-  input       [REG_WIDTH -1:0]  infrared_data     , //
-  input                         nack              , //
-  input                         bsy               , //
-  output reg  [REG_WIDTH -1:0]  reg_config        , //
-  output reg  [REG_WIDTH -1:0]  reg_clear_ch      , //
-  output reg  [REG_WIDTH -1:0]  reg_red_ch        , //
-  output reg  [REG_WIDTH -1:0]  reg_green_ch      , //
-  output reg  [REG_WIDTH -1:0]  reg_blue_ch       , //
-  output reg  [REG_WIDTH -1:0]  reg_infrared_ch   , //
-  output reg  [REG_WIDTH -1:0]  reg_seed          , //
-  output reg  [REG_WIDTH -1:0]  reg_status          //
+  input                         clk               , // System clock
+  input                         rst_n             , // Active-low asynchronous reset 
+  input       [DATA_WIDTH -1:0] pwdata            , // Parallel write data input
+  input       [ADDR_WIDTH -1:0] paddr             , // Address specifying target register
+  input                         p_valid_wr        , // Write enable signal for register write operation
+  input       [REG_WIDTH -1:0]  clear_data        , // Input data from sensor: clear (ambient light) channel
+  input       [REG_WIDTH -1:0]  red_data          , // Input data from sensor: red channel
+  input       [REG_WIDTH -1:0]  green_data        , // Input data from sensor: green channel
+  input       [REG_WIDTH -1:0]  blue_data         , // Input data from sensor: blue channel
+  input       [REG_WIDTH -1:0]  infrared_data     , // Input data from sensor: infrared channel
+  input                         nack              , // I2C NACK signal indicating failed transmission
+  input                         bsy               , // Busy signal indicating I2C is active
+  output reg  [REG_WIDTH -1:0]  reg_config        , // Configuration register
+  output reg  [REG_WIDTH -1:0]  reg_clear_ch      , // Register storing latest clear channel value
+  output reg  [REG_WIDTH -1:0]  reg_red_ch        , // Register storing latest red channel value
+  output reg  [REG_WIDTH -1:0]  reg_green_ch      , // Register storing latest green channel value
+  output reg  [REG_WIDTH -1:0]  reg_blue_ch       , // Register storing latest blue channel value
+  output reg  [REG_WIDTH -1:0]  reg_infrared_ch   , // Register storing latest infrared channel value
+  output reg  [REG_WIDTH -1:0]  reg_seed          , // Register storing LFSR seed
+  output reg  [REG_WIDTH -1:0]  reg_status          // Status register
 );
 
 // ----------------

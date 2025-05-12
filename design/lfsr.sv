@@ -1,11 +1,11 @@
 module lfsr #(
-parameter CHOICE = 0
+parameter CHOICE = 0 // Selects between different LFSR polynomial tap configurations
 ) (
-  input               clk       ,
-  input               rst_n     ,
-  input               enable    ,
-  input       [15:0]  seed_data ,
-  output reg  [15:0]  r_LFSR 
+  input               clk       , // System clock
+  input               rst_n     , // Active-low asynchronous reset
+  input               enable    , // LFSR enable signal; allows shifting only when high
+  input       [15:0]  seed_data , // Initial seed value to load into the LFSR
+  output reg  [15:0]  r_LFSR      // Current value of the LFSR (pseudo-random output)
 );
 
 reg r_XNOR;

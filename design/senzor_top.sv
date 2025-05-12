@@ -97,6 +97,9 @@ always @(paddr) begin
   endcase
 end
 
+// ----------------
+// APB registers
+// ----------------
 registers #(
   .REG_WIDTH(16),
   .DATA_WIDTH(DATA_WIDTH),
@@ -124,11 +127,17 @@ registers #(
   .reg_status       (reg_status       )
 );
 
+// ----------------
+// 500MHz clock generator
+// ----------------
 clk_generator i2c_clock(
   .rst_n      (rst_n    ),
   .clk_out    (clk_out  )
 );
 
+// ----------------
+// I2C clock generator
+// ----------------
 clk_divider  i_clk_divider(
   .clk_in       (clk_out            ),
   .rst_n        (rst_n              ),
@@ -137,26 +146,34 @@ clk_divider  i_clk_divider(
   .sda_en       (sda_en)
 );
 
+// ----------------
+// I2C master control
+// ----------------
 control master_control(
-  .clk(clk),
-  .rst_n(rst_n),
-  .clk_in(clk_out),
-  .i2c_clk_out(i2c_clk_out),
-  .i2c_scl(scl),
-  .i2c_sda(sda),
-  .clk_config(reg_config[15:14]),
-  .senzor_on(senzor_on),
-  .i2c_address(reg_config[13:7]),
-  .sda_en(sda_en),
-  .clear_data(clear_data),
-  .red_data(red_data),
-  .green_data(green_data),
-  .blue_data(blue_data),
-  .infrared_data(infrared_data),
-  .endian(endian),
-  .data_enable(data_enable)
+  .clk            (clk                ),
+  .rst_n          (rst_n              ),
+  .clk_in         (clk_out            ),
+  .i2c_clk_out    (i2c_clk_out        ),
+  .i2c_scl        (scl                ),
+  .i2c_sda        (sda                ),
+  .senzor_on      (senzor_on          ),
+  .i2c_address    (reg_config[13:7]   ),
+  .sda_en         (sda_en             ),
+  .clear_data     (clear_data         ),
+  .red_data       (red_data           ),
+  .green_data     (green_data         ),
+  .blue_data      (blue_data          ),
+  .infrared_data  (infrared_data      ),
+  .endian         (endian             ),
+  .data_enable    (data_enable        ),
+  .reg_freeze     (reg_freeze         ),
+  .bsy            (bsy                ),
+  .nack           (nack               )
 );
 
+// ----------------
+// Clear random data generator
+// ----------------
 lfsr #(
   .CHOICE(5)
 ) clear_random(
@@ -167,6 +184,9 @@ lfsr #(
   .r_LFSR       (clear_data                   )
 );
 
+// ----------------
+// Red random data generator
+// ----------------
 lfsr #(
   .CHOICE(3)
 ) red_random(
@@ -177,6 +197,9 @@ lfsr #(
   .r_LFSR       (red_data                     )
 );
 
+// ----------------
+// Green random data generator
+// ----------------
 lfsr #(
   .CHOICE(7)
 ) green_random(
@@ -187,6 +210,9 @@ lfsr #(
   .r_LFSR       (green_data                   )
 );
 
+// ----------------
+// Blue random data generator
+// ----------------
 lfsr #(
   .CHOICE(6)
 ) blue_random(
@@ -197,6 +223,9 @@ lfsr #(
   .r_LFSR       (blue_data                    )
 );
 
+// ----------------
+// Infrared random data generator
+// ----------------
 lfsr #(
   .CHOICE(4)
 ) infrared_random(

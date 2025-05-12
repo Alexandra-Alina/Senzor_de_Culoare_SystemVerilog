@@ -1,21 +1,23 @@
 module control(
-  input       clk,
-  input       rst_n,
-  input       clk_in,
-  input       i2c_clk_out,
-  output      i2c_scl,
-  inout       i2c_sda,
-  input [1:0]       clk_config,
-  input       senzor_on,
-  input [6:0] i2c_address,
-  input       sda_en,
-  input [15:0]  clear_data,
-  input [15:0]  red_data,
-  input [15:0]  green_data,
-  input [15:0]  blue_data,
-  input [15:0]  infrared_data,
-  input         endian,
-  output reg  data_enable
+  input         clk             , // System clock
+  input         rst_n           , // Active-low asynchronous reset
+  input         clk_in          , // 500MHz clock
+  input         i2c_clk_out     , // Clock for I2C output timing
+  output        i2c_scl         , // I2C clock line
+  inout         i2c_sda         , // I2C bidirectional data line
+  input         senzor_on       , // Sensor enable signal
+  input [ 6:0]  i2c_address     , // 7-bit I2C address 
+  input         sda_en          , // SDA output enable control
+  input [15:0]  clear_data      , // Clear (ambient light) channel data
+  input [15:0]  red_data        , // Red color channel data
+  input [15:0]  green_data      , // Green color channel data
+  input [15:0]  blue_data       , // Blue color channel data
+  input [15:0]  infrared_data   , // Infrared channel data
+  input         endian          , // Endianness control
+  output reg    data_enable     , // Indicates when LFSR data can be update
+  output reg    reg_freeze      , // Freezes internal registers (to prevent updates)
+  output reg    bsy             , // I2C bus busy flag
+  output reg    nack              // Indicates I2C NACK was received
 );
 
 localparam STATE_SIZE             = 5;
@@ -89,17 +91,21 @@ end
 always @(*) begin
   case(c_state)
     ST_IDLE: begin
-      i2c_scl_enable <= 1'b0;
-      i2c_sda_enable <= 1'b0;
-      sda_out <= 1'b1;
-      data_enable <= 1'b0;
-      bit_count <= 4'b0;
+      i2c_scl_enable  <= 1'b0;
+      i2c_sda_enable  <= 1'b0;
+      sda_out         <= 1'b1;
+      data_enable     <= 1'b0;
+      bsy             <= 1'b0;
+      reg_freeze      <= 1'b0;
+      bit_count       <= 4'b0;
+      nack            <= 1'b0;
       if(senzor_on) begin
-        counter <= 13'b0;
+        counter     <= 13'b0;
         data_enable <= 1'b1;
-        next_state <= ST_WAIT_1;
+        reg_freeze  <= 1'b1;
+        next_state  <= ST_WAIT_1;
       end else begin
-        next_state <= ST_IDLE;
+        next_state  <= ST_IDLE;
       end
     end
     ST_WAIT_1: begin
@@ -111,22 +117,25 @@ always @(*) begin
     end
     ST_START_SDA: begin
       if(reset_counter) begin
-        i2c_sda_enable <= 1'b1;
-        sda_out <= 1'b0;
-        next_state <= ST_START_SCL;
+        i2c_sda_enable  <= 1'b1;
+        sda_out         <= 1'b0;
+        bsy             <= 1'b1;
+        next_state      <= ST_START_SCL;
       end else
         next_state <= ST_START_SDA;
     end
     ST_START_SCL: begin
       if(reset_counter) begin
-        i2c_scl_enable <= 1'b1;
-        next_state <= ST_ADDRESS;
+        i2c_scl_enable  <= 1'b1;
+        next_state      <= ST_ADDRESS;
       end else
         next_state <= ST_START_SCL;
     end
     ST_STOP_SDA: begin
-      i2c_sda_enable <= 1'b0;
-      next_state <= ST_IDLE;
+      i2c_sda_enable  <= 1'b0;
+      reg_freeze      <= 1'b0;
+      bsy             <= 1'b0;
+      next_state      <= ST_IDLE;
     end
     ST_STOP_SCL: begin
       i2c_scl_enable <= 1'b0;
@@ -138,53 +147,53 @@ always @(*) begin
     ST_ADDRESS: begin
       if(~(|bit_count)) begin
         address_shift <= {i2c_address, 1'b0};
-        bit_count <= 4'd10;
+        bit_count     <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b1;
-        next_state <= ST_CHECK_RSP_ADDR;
+        sda_out     <= 1'b1;
+        next_state  <= ST_CHECK_RSP_ADDR;
       end else
         next_state <= ST_ADDRESS;
     end
 
     ST_CLEAR_DATA_1: begin
       if(~(|bit_count)) begin
-        reg_clear_data_1 <= (endian) ? clear_data[15:8] : clear_data[7:0];
-        bit_count <= 4'd10;
+        reg_clear_data_1  <= (endian) ? clear_data[15:8] : clear_data[7:0];
+        bit_count         <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b1;
-        next_state <= ST_CLEAR_DATA_RSP_1;
+        sda_out     <= 1'b1;
+        next_state  <= ST_CLEAR_DATA_RSP_1;
       end else
         next_state <= ST_CLEAR_DATA_1;
     end
     ST_CLEAR_DATA_2: begin
       if(~(|bit_count)) begin
-        reg_clear_data_2 <= (endian) ? clear_data[7:0] : clear_data[15:8];
-        bit_count <= 4'd10;
+        reg_clear_data_2  <= (endian) ? clear_data[7:0] : clear_data[15:8];
+        bit_count         <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b1;
-        next_state <= ST_CLEAR_DATA_RSP_2;
+        sda_out     <= 1'b1;
+        next_state  <= ST_CLEAR_DATA_RSP_2;
       end else
         next_state <= ST_CLEAR_DATA_2;
     end
 
     ST_RED_DATA_1: begin
       if(~(|bit_count)) begin
-        reg_red_data_1 <= (endian) ? red_data[15:8] : red_data[7:0];
-        bit_count <= 4'd10;
+        reg_red_data_1  <= (endian) ? red_data[15:8] : red_data[7:0];
+        bit_count       <= 4'd10;
       end
       if(bit_count == 4'd1) begin
-        sda_out <= 1'b1;
-        next_state <= ST_RED_DATA_RSP_1;
+        sda_out     <= 1'b1;
+        next_state  <= ST_RED_DATA_RSP_1;
       end else
         next_state <= ST_RED_DATA_1;
     end
     ST_RED_DATA_2: begin
       if(~(|bit_count)) begin
-        reg_red_data_2 <= (endian) ? red_data[7:0] : red_data[15:8];
-        bit_count <= 4'd10;
+        reg_red_data_2  <= (endian) ? red_data[7:0] : red_data[15:8];
+        bit_count       <= 4'd10;
       end
       if(bit_count == 4'd1) begin
         sda_out <= 1'b1;
@@ -335,6 +344,7 @@ always @(posedge i2c_clk_out) begin
       bit_count <= 'b0;
       if(i2c_sda) begin
         counter <= 13'd0;
+        nack <= 1'b1;
         next_state <= ST_STOP_SCL;
       end else
         next_state <= ST_CLEAR_DATA_1;
@@ -343,6 +353,7 @@ always @(posedge i2c_clk_out) begin
       bit_count <= 'b0;
       if(i2c_sda) begin
         counter <= 13'd0;
+        nack <= 1'b1;
         next_state <= ST_STOP_SCL;
       end else
         next_state <= ST_CLEAR_DATA_2;
@@ -351,6 +362,7 @@ always @(posedge i2c_clk_out) begin
       bit_count <= 'b0;
       if(i2c_sda) begin
         counter <= 13'd0;
+        nack <= 1'b1;
         next_state <= ST_STOP_SCL;
       end else
         next_state <= ST_RED_DATA_1;
@@ -359,6 +371,7 @@ always @(posedge i2c_clk_out) begin
       bit_count <= 'b0;
       if(i2c_sda) begin
         counter <= 13'd0;
+        nack <= 1'b1;
         next_state <= ST_STOP_SCL;
       end else
         next_state <= ST_RED_DATA_2;
@@ -367,6 +380,7 @@ always @(posedge i2c_clk_out) begin
       bit_count <= 'b0;
       if(i2c_sda) begin
         counter <= 13'd0;
+        nack <= 1'b1;
         next_state <= ST_STOP_SCL;
       end else
         next_state <= ST_GREEN_DATA_1;
@@ -375,6 +389,7 @@ always @(posedge i2c_clk_out) begin
       bit_count <= 'b0;
       if(i2c_sda) begin
         counter <= 13'd0;
+        nack <= 1'b1;
         next_state <= ST_STOP_SCL;
       end else
         next_state <= ST_GREEN_DATA_2;
@@ -383,6 +398,7 @@ always @(posedge i2c_clk_out) begin
       bit_count <= 'b0;
       if(i2c_sda) begin
         counter <= 13'd0;
+        nack <= 1'b1;
         next_state <= ST_STOP_SCL;
       end else
         next_state <= ST_BLUE_DATA_1;
@@ -391,6 +407,7 @@ always @(posedge i2c_clk_out) begin
       bit_count <= 'b0;
       if(i2c_sda) begin
         counter <= 13'd0;
+        nack <= 1'b1;
         next_state <= ST_STOP_SCL;
       end else
         next_state <= ST_BLUE_DATA_2;
@@ -399,6 +416,7 @@ always @(posedge i2c_clk_out) begin
       bit_count <= 'b0;
       if(i2c_sda) begin
         counter <= 13'd0;
+        nack <= 1'b1;
         next_state <= ST_STOP_SCL;
       end else
         next_state <= ST_INFRARED_DATA_1;
@@ -407,6 +425,7 @@ always @(posedge i2c_clk_out) begin
       bit_count <= 'b0;
       if(i2c_sda) begin
         counter <= 13'd0;
+        nack <= 1'b1;
         next_state <= ST_STOP_SCL;
       end else
         next_state <= ST_INFRARED_DATA_2;
@@ -414,6 +433,8 @@ always @(posedge i2c_clk_out) begin
     ST_INFRARED_DATA_RSP_2: begin
       bit_count <= 'b0;
       counter <= 13'd0;
+      if(i2c_sda)
+        nack <= 1'b1;
       next_state <= ST_STOP_SCL;
     end
   endcase
