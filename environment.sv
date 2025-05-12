@@ -5,10 +5,7 @@
   import i2c_pkg::*;
   import uvm_pkg::*;
   `include "./scoreboard/scoreboard.sv"
-<<<<<<< HEAD
-=======
 
->>>>>>> d0ba8a91234b8fbc8cc1e5e0cec49b35081e5b90
 class environment extends uvm_env;
 
   `uvm_component_utils(environment)
