@@ -1,6 +1,6 @@
 module clk_generator (
-  input       rst_n   ,
-  output reg  clk_out
+  input       rst_n   , // Active-low asynchronous reset
+  output reg  clk_out   // 500MHz clock
 );
 
 always @(negedge rst_n)
@@ -8,18 +8,6 @@ always @(negedge rst_n)
 
 
 always @(*) begin
-  #1ns  clk_out <= ~clk_out; // 1GHz frequency
+  #1ns  clk_out <= ~clk_out; // 500MHz frequency
 end
-
-/*
-always @(*) begin
-  case(MODE)
-    0:        #5us        clk <= ~clk;
-    1:        #1.25us     clk <= ~clk;
-    2:        #0.5us      clk <= ~clk;
-    3:        #147.059ns  clk <= ~clk;
-    default:  #5us        clk <= ~clk;  
-  endcase
-end
-*/
 endmodule

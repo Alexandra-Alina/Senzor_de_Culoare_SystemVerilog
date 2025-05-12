@@ -1,15 +1,15 @@
 module clk_divider (
   input       clk_in        , // 500MHz clock 
-  input       rst_n         , // 
-  input [1:0] clk_config    , //
-  output reg  i2c_clk_out   , //
-  output reg  sda_en          //
+  input       rst_n         , // Active-low asynchronous reset
+  input [1:0] clk_config    , // Clock divider configuration selector
+  output reg  i2c_clk_out   , // Output clock for I2C operations
+  output reg  sda_en          // SDA output enable signal
 );
 
 localparam DIV_100KHZ = 25;   // 5000
-localparam DIV_400KHZ = 6; // 1250
+localparam DIV_400KHZ = 6;    // 1250
 localparam DIV_1MHZ   = 4;    // 500
-localparam DIV_3_4MHZ = 3; // 147
+localparam DIV_3_4MHZ = 3;    // 147
 
 reg [6:0]  counter;
 reg [6:0]  divider_value;
