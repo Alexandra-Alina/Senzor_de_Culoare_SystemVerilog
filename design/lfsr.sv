@@ -25,7 +25,7 @@ always @(*) begin
     5: r_XNOR = r_LFSR[14] ^ r_LFSR[5] ^ r_LFSR[3] ^ r_LFSR[1];
     6: r_XNOR = r_LFSR[12] ^ r_LFSR[6] ^ r_LFSR[4] ^ r_LFSR[1];
     7: r_XNOR = r_LFSR[13] ^ r_LFSR[4] ^ r_LFSR[3] ^ r_LFSR[1];
-    default: r_XNOR = r_LFSR[16] ^ r_LFSR[15] ^ r_LFSR[13] ^ r_LFSR[4];
+    default: r_XNOR = r_LFSR[15] ^ r_LFSR[14] ^ r_LFSR[12] ^ r_LFSR[3];
   endcase
 end
 
