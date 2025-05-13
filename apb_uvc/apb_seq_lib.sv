@@ -231,9 +231,13 @@ class color_disable_seq extends apb_base_seq;
       `uvm_do_with(req, { req.access == APB_WRITE;
                           req.addr   == 'h0;
                           req.data   == 'b11110;})
+
+      //seed register - random value
+      
       `uvm_do_with(req, { req.access == APB_WRITE;
-                          req.addr   == 'h0;
-                          req.data   == 'hFFFF;})
+                          req.addr   == 'h10;})
+
+      //status - turn on
 
     repeat(10) begin
       `uvm_do_with(req, { req.access == APB_WRITE;
