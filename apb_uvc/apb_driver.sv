@@ -27,6 +27,9 @@ class apb_driver extends uvm_driver #(apb_trans);
   task run_phase(uvm_phase phase);
     super.run_phase(phase);
 
+    @(negedge apb_vif.rst_n);
+    wait_reset();
+
     forever begin
       //Initial reset
       if (!apb_vif.rst_n) begin
@@ -37,6 +40,7 @@ class apb_driver extends uvm_driver #(apb_trans);
       fork
         begin
           //Reset
+          @(negedge apb_vif.rst_n);
           wait_reset();
         end
         begin
@@ -52,7 +56,7 @@ class apb_driver extends uvm_driver #(apb_trans);
 
   //task that detects the reset and initializes the signals
   task wait_reset();
-        @(negedge apb_vif.rst_n);
+        @(posedge apb_vif.rst_n);
 
         `uvm_info(get_type_name(), "Reset detected by APB Driver", UVM_LOW);
 

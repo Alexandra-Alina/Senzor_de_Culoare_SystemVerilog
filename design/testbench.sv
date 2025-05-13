@@ -92,7 +92,7 @@ initial begin
   
   uvm_config_db #(virtual interface i2c_interface)::set(null, "*.env.i2c_slv_agnt.*", "i2c_vif", i2c_vif);
 
-  run_test("test_base");
+  run_test("test_registers");
 end
 
 endmodule
