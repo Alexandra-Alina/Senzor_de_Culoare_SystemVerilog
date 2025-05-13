@@ -10,7 +10,7 @@ class test_functional extends test_base;
 
   `uvm_component_utils(test_functional)
   
-
+  apb_5_packets apb_5_packets_seq;
   color_disable_seq apb_color_disable_seq;
   environment env;
 
@@ -27,7 +27,6 @@ class test_functional extends test_base;
     env = environment::type_id::create("env", this);
     apb_color_disable_seq =  color_disable_seq::type_id::create("apb_color_disable_seq");
     
-    
     `uvm_info(get_type_name(), $sformatf("Start test_functional"), UVM_LOW)
   endfunction:build_phase
 
@@ -36,7 +35,6 @@ class test_functional extends test_base;
     phase.raise_objection(this);
 
     `uvm_info("FUNCTIONAL_BASE", "real execution begins", UVM_NONE);
-    #1000
 
       begin
      `ifdef DEBUG
@@ -48,8 +46,7 @@ class test_functional extends test_base;
       `endif;
       end
 
-
-    #100
+     #10000
     phase.drop_objection(this);
     endtask
 

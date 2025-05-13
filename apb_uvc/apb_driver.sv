@@ -71,6 +71,7 @@ class apb_driver extends uvm_driver #(apb_trans);
   task drive_trans(apb_trans  trans);
 		`uvm_info(get_type_name(), $sformatf("APB MASTER Driver start a transfer:\n%s",trans.sprint()), UVM_LOW)
     	repeat (trans.trans_delay) @(apb_vif.m_cb);
+		`uvm_info(get_type_name(), "APB MASTER AFTER DELAY\n\n", UVM_LOW)
         
         // Setup phase
 	    apb_vif.m_cb.paddr <= trans.addr;

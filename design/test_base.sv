@@ -94,7 +94,7 @@ class test_base extends uvm_test;
   //   vif_sensor_dut.valid_i <= 0;
   //  // vif_sensor_dut.ready_o <= 0;
   //   vif_button_dut.enable_i <= 0;
-    #100//se mai asteapta 100 de unitati de timp inainte sa se dezactiveze martorul de activitate, actiune care va permite simulatorului sa incheie activitatea
+     #10000//se mai asteapta 100 de unitati de timp inainte sa se dezactiveze martorul de activitate, actiune care va permite simulatorului sa incheie activitatea
 	//se dezactiveaza martorul 
     phase.drop_objection(this);
     endtask

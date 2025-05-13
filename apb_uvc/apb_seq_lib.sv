@@ -227,13 +227,18 @@ class color_disable_seq extends apb_base_seq;
   endfunction:new
   
   virtual task body();
-    repeat(10) begin
-      color_disable = $random;
+      //config reg
       `uvm_do_with(req, { req.access == APB_WRITE;
                           req.addr   == 'h0;
-                          req.data   == {2'b10, 7'h16, color_disable, 1'b0};})
+                          req.data   == 'b11110;})
+      `uvm_do_with(req, { req.access == APB_WRITE;
+                          req.addr   == 'h0;
+                          req.data   == 'hFFFF;})
+
+    repeat(10) begin
+      `uvm_do_with(req, { req.access == APB_WRITE;
+                          req.addr   == 'h10;})
     end
-    #200ns;
   endtask:body
 
 endclass:color_disable_seq

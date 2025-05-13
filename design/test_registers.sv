@@ -37,8 +37,6 @@ class test_registers extends test_base;
     phase.raise_objection(this);
 
     `uvm_info("TEST_REGISTER", "real execution begins", UVM_NONE);
-    #1000
-
       begin
      `ifdef DEBUG
         $display("va incepe sa ruleze secventa: fast_switch_seq pentru agentul activ agent_buton");
@@ -52,7 +50,7 @@ class test_registers extends test_base;
 
    // apb_registers_seq.start(env.apb_mst_agnt.apb_seqr);
 
-    #100
+    #10000
     phase.drop_objection(this);
     endtask
 
